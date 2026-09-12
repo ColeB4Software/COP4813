@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+        <meta name="Description" content="Cole Bryant's COP4813 Web Systems Login In">
+        <meta name="keywords" content="COP4813, Confirmation, Cole Bryant, Web Systems">
+        <meta name="author" content="Cole Bryant">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <Title>COP4813 Website: Cole Bryant</Title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <h1>Confirmation Page</h1>
+
+    <ul class="menu">
+        <li><a href="Form.html">Login In</a></li>
+        <li><a href="index.html">Menu</a></li>
+        <li><a href="Assignment.html">Class Assignments</a></li>
+        <li><a href="Help.html">Programming Resources</a></li>
+    </ul>
+</head>
+
+<body>
+    <section class="confirm-container">
+        <h>Please review the details</h>
+        <p>Verify whether or not your data inputs are all correct before the final submisson.</p>
+        
+            <table class="confirm-table">
+                <tr>
+                    <th>First name:</th>
+                    <td id="display-first"></td>
+
+                    <th>Last name: </th>
+                    <td id="display-last"></td>
+                </tr>
+                <tr>
+                    <th>Birthday:</th>
+                    <td id="display-birthdate"></td>
+                </tr>
+                <tr>
+                    <th>Home Address:</th>
+                    <td id="display-address"></td>
+                </tr>
+                <tr>
+                    <th>Phone Number:</th>
+                    <td id="display-phone"></td>
+                </tr>
+                <tr>
+                    <th>Email Address:</th>
+                    <td id="display-email"></td>
+                </tr>
+                <tr>
+                    <th>Message:</th>
+                    <td id="display-message"></td>
+                </tr>
+            </table>
+            <div class="confirm-action">
+                <button type="button" id="edit">Edit Info</button>
+                <button type="button" id="confirm">Confirm and Submit</button>
+            </div>
+    </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstname = sessionStorage.getItem('firstname') || 'N/A';
+            const lastname = sessionStorage.getItem('lastname') || 'N/A';
+            const birthdate = sessionStorage.getItem('birthdate') || 'N/A';
+            const address = sessionStorage.getItem('address') || '';
+            const city = sessionStorage.getItem('city') || '';
+            const state = sessionStorage.getItem('state') || '';
+            const zip = sessionStorage.getItem('zip') || '';
+            const phone = sessionStorage.getItem('phone') || 'N/A';
+            const email = sessionStorage.getItem('email') || 'N/A';
+            const message = sessionStorage.getItem('message') || 'N/A';
+
+            document.getElementById('display-first').textContent = firstname;
+            document.getElementById('display-last').textContent = lastname;
+            document.getElementById('display-birthdate').textContent = birthdate;
+            document.getElementById('display-address').textContent = address, city, state, zip;
+            document.getElementById('display-phone').textContent = phone;
+            document.getElementById('display-email').textContent = email;
+            document.getElementById('display-message').textContent = message;
+
+            document.getElementById('edit').addEventListener('click', function() {
+                window.location.href = 'Form.html';
+            });
+
+            document.getElementById('confirm').addEventListener('click', function(){
+                const MailToAddress = '4colesiphone@gmail.com';
+                const subject = encodeURIComponent('Form Submission Confirm');
+                const bodyContent = encodeURIComponent(
+                    'First Name: ${firstname}\n' +
+                    'Last Name: ${lastname}\n' +
+                    'Birthday: ${birthdate}\n' +
+                    'Address: ${address}, ${city}, ${state} ${zip}\n' +
+                    'Phone: ${phone}\n' +
+                    'Email: ${email}\n' +
+                    'Message: \n${message}'
+                );
+                //It should be ``, the digit right next to 1 key. Not '', which is used for quotation marks.
+                window.location.href = `mailto:${MailToAddress}?subject:${subject}&body:${bodyContent}`;
+            });
+        });
+    </script>
+    <footer> <P>2026 Cole Bryant | COP4813 Web Systems </P> 
+    </footer>
+</body>
+</html>
