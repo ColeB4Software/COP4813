@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="Description" content="Cole Bryant's COP4813 Web Systems Plot">
+        <meta name="keywords" content="COP4813, Plot, Cole Bryant, Web Systems">
+        <meta name="author" content="Cole Bryant">
+        <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+        <h2>Creating Plots</h2>
+
+        <ul class="menu">
+            <li><a href="Form.html">Login In</a></li>
+            <li><a href="index.html">Menu</a></li>
+            <li><a href="Assignment.html">Class Assignments</a></li>
+            <li><a href="Help.html">Programming Resources</a></li>
+        </ul>
+    </head>
+<body>
+<fieldset>
+<h>Equation:</h> <br/>
+<a>y = C / (1 + ae<sup>−x</sup>)</a>
+<p>
+    <strong>C</strong> represents the carrying capacity<br/>
+    <strong>a</strong> controls the horizontal position of the curve <br/>
+    <strong>x</strong> represents time
+</p>
+</fieldset>
+
+<fieldset>
+<h>Calculation Inputs</h> <br/>
+<label for='c'>C (Carry Capacity): </label>
+<input type='number' id='c' name='capacity' min='0' required>
+<br/>
+
+<label for='a'>a (Horiontal Shift): </label>
+<input type='number' id='a' name='shift' required>
+<br/>
+
+<label for='x'>x (Time Range): </label>
+<input type='number' id='x' name='range' min='1' required>
+<br/><br/>
+
+<input type="button" value='Calculate' id='cal'/>
+</fieldset>
+
+<fieldset>
+<h>Results and Graph:</h> <br/>
+<p id='output'> 
+    Enter the values above and select Calculate.
+</p>
+<canvas id='linechart' style='width:100%; max-width:700px'></canvas>
+</fieldset>
+
+<script>
+    //List the values
+document.getElementById('cal').addEventListener('click', () => {
+const c = document.getElementById('c').value;
+const a = document.getElementById('a').value;
+const MaxX = document.getElementById('x').value;
+
+//Store graph points
+const graphval = [];
+
+//Calculate values from x = 0 through the selected time range
+for (let x = 0; x <= MaxX; x++) {
+
+  //Logistic growth equation
+  const y = c / (1 + a * Math.exp(-x));
+  
+  //Inputs the x and y values for the graph
+  graphval.push({
+    x: x,
+    y: y
+  });
+}
+
+//Final Calculation
+  const FinY = c / (1 + a * Math.exp(-MaxX));
+
+//Reset button
+
+//Display Calculation
+document.getElementById('output').textContent = `At the time ${MaxX}, the growth value is ${FinY}`;
+
+//Create graph/chart
+new Chart('linechart', {
+  type: 'line',
+  data: {
+    datasets: [{
+      label: 'Logistic Growth',
+        data: graphval,
+        borderWidth: 2,
+        pointRadius: 3 
+      }],
+  },
+  options: {
+    scales: {
+        //List the x values on the graph
+      x: {
+        type: 'linear',
+        title: {
+          display: true,
+          text: 'Time (x)'
+        }
+      },
+             //List the y values on the graph
+      y: {
+        title: {
+          display: true,
+          text: 'Growth (y)'
+        }
+      }
+    },
+  }
+});
+});
+</script>
+
+    <footer> <P>2026 Cole Bryant | COP4813 Web Systems </P> </footer>
+</body>
+</html>
