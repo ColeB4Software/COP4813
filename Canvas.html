@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+        <meta name="Description" content="Cole Bryant's COP4813 Web Systems Canvas">
+        <meta name="keywords" content="COP4813, Canvas, Cole Bryant, Web Systems">
+        <meta name="author" content="Cole Bryant">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <Title>COP4813 Website: Cole Bryant</Title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <h1>Canvas: Creating a Spirograph</h1>
+
+    <ul class="menu">
+        <li><a href="Form.html">Login In</a></li>
+        <li><a href="index.html">Menu</a></li>
+        <li><a href="Assignment.html">Class Assignments</a></li>
+        <li><a href="Help.html">Programming Resources</a></li>
+    </ul>
+</head>
+
+<body>
+<section>
+<p>The equations below are used to calculate the coordinates needed to create a spirograph drawing on the canvas. Enter the values for the variables and press the<strong>Draw Spirograph</strong> button below to create the pattern.</p> <br/>
+<strong>  x = (R+r)*cos(t) - (r+0)*cos(((R+r)/r)*t)</strong> <br/>
+<strong>  y = (R+r)*sin(t) - (r+0)*sin(((R+r)/r)*t)</strong> <br/>
+<strong>  R = the radius of the outer (fixed) circle</strong> <br/>
+<strong>  r = the radius of the rotating (inner) circle</strong> <br/>
+<strong>  O = the offset of the pen from the center of the inner circle</strong> 
+</section>
+
+<fieldset>
+    <h>Calculation Inputs:</h><br/>
+    <label for='R'>R (radius for outer/fixed circle): </label>
+<input type='number' id='R' name='fixed' min='1' required>
+<br/>
+
+<label for='r'>r (radius for rotating/inner circle): </label>
+<input type='number' id='r' name='inner' min='1' required>
+<br/>
+
+<label for='O'>O (the offset of the pen from the center of the inner circle): </label>
+<input type='number' id='o' name='center' min='1' required>
+<br/>
+</fieldset>
+
+<br/>
+
+<button id="drawSpi" type="button">Draw Spirograph</button> <br/>
+<h>Canvas for Spirograph:<br/></h>
+<!-- To see your canvas, make sure the stsyle has px, solid, and color for it to appear.-->
+    <canvas id="myCanvas" width="800" height="800" style="border:1px solid black;">Your browser does not support the HTML canas tag.</canvas>
+
+<script>
+    //Get the canvas and its 2D drawing
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+
+//function used to create graph
+function drawSpi() {
+
+    //Values inputed by the user will be saved here
+const R = document.getElementById('R').value;
+const r = document.getElementById('r').value;
+const O = document.getElementById('o').value;
+
+//Values are valid
+//Alert("text") = shows the message when the 'if' program is operated
+if (R <= 0 || r <= 0 || o < 0) {
+    alert('Error: R and r must be greater than 0, or negative.');
+    return;
+}
+
+
+//Center point for the canvas
+const centerX = canvas.width / 2;
+const centerY = canvas.height / 2;
+
+//Drawing a new path
+ctx.beginPath();
+
+for (let t = 0; 
+t <= Math.PI * 2 * 100; 
+t += 0.01) {
+    //Trigonometric functions(X and Y)
+    // math.cos(t) = cos(t)
+    const x = (R + r) * Math.cos(t) - (r + O) * Math.cos(((R+r)/r)*t);
+    const y = (R + r) * Math.sin(t) - (r + O) * Math.sin(((R+r)/r)*t);
+
+    //Move the calculated coordinates, making the pattern centered on the canvas
+    const canvasX = centerX + x;
+    const canvasY = centerY + y;
+
+    if (t===0) {
+        ctx.moveTo(
+            canvasX,
+            canvasY
+        );
+    }
+    else {
+        ctx.lineTo(
+            canvasX,
+            canvasY
+        );
+    }
+}
+
+ctx.stroke();
+}
+
+document.getElementById('drawSpi').addEventListener('click', drawSpi);
+</script>
+<footer> <P>2026 Cole Bryant | COP4813 Web Systems </P> </footer>
+</body>
+</html>
