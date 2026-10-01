@@ -3,7 +3,7 @@
         {
             "PlayerID": 1,
             "firstName": "Jack",
-            "lastname": "Brain",
+            "lastName": "Brain",
             "nationality": "American",
             "age": 25
         },
