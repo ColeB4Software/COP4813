@@ -1,0 +1,39 @@
+{
+    "players": [
+        {
+            "PlayerID": 1,
+            "firstName": "Jack",
+            "lastname": "Brain",
+            "nationality": "American",
+            "age": 25
+        },
+        {
+            "PlayerID": 2,
+            "firstName": "Eric",
+            "lastname": "Multiz",
+            "nationality": "German",
+            "age": 28
+        },
+        {
+            "PlayerID": 3,
+            "firstName": "David",
+            "lastname": "Horix",
+            "nationality": "Greek",
+            "age": 30
+        },
+        {
+            "PlayerID": 4,
+            "firstName": "Joe",
+            "lastname": "Kevin",
+            "nationality": "Australian",
+            "age": 23
+        },
+        {
+            "PlayerID": 5,
+            "firstName": "Martain",
+            "lastname": "Locus",
+            "nationality": "Greek",
+            "age": 30
+        }
+    ]
+}
