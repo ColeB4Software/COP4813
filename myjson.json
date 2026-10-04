@@ -5,35 +5,55 @@
             "firstName": "Jack",
             "lastName": "Brain",
             "nationality": "American",
-            "age": 25
+            "age": 25,
+            "position": "Quarterback",
+            "team": "Florida Gators",
+            "jerseyNumber": 06,
+            "gamesPlayed": 13
         },
         {
             "PlayerID": 2,
             "firstName": "Eric",
             "lastName": "Multiz",
             "nationality": "German",
-            "age": 28
+            "age": 28,
+            "position": "Fullback",
+            "team": "Geogria Horses",
+            "jerseyNumber": 12,
+            "gamesPlayed": 9
         },
         {
             "PlayerID": 3,
             "firstName": "David",
             "lastName": "Horix",
             "nationality": "Greek",
-            "age": 30
+            "age": 30,
+            "position": "Wide Receiver",
+            "team": "Florida Gators",
+            "jerseyNumber": 16,
+            "gamesPlayed": 15
         },
         {
             "PlayerID": 4,
             "firstName": "Joe",
             "lastName": "Kevin",
             "nationality": "Australian",
-            "age": 23
+            "age": 23,
+            "position": "Center",
+            "team": "Jacksonville Sharks",
+            "jerseyNumber": 15,
+            "gamesPlayed": 7
         },
         {
             "PlayerID": 5,
             "firstName": "Martain",
             "lastName": "Charles",
             "nationality": "British",
-            "age": 30
+            "age": 30,
+            "position": "Quarterback",
+            "team": "Missouri Tigers",
+            "jerseyNumber" 10,
+            "gamesPlayed": 14
         }
     ]
 }
