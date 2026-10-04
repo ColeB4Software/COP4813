@@ -52,7 +52,7 @@
             "age": 30,
             "position": "Quarterback",
             "team": "Missouri Tigers",
-            "jerseyNumber" 10,
+            "jerseyNumber": 10,
             "gamesPlayed": 14
         }
     ]
