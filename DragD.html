@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Description" content="Cole Bryant's COP4813 Web Systems Drag and Drop">
+    <meta name="keywords" content="COP4813, Drag and Drop, Cole Bryant, Web Systems">
+    <meta name="author" content="Cole Bryant">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+
+    <h2>Drag and Drop</h2>
+
+    <ul class="menu">
+        <li><a href="Form.html">Login In</a></li>
+        <li><a href="index.html">Menu</a></li>
+        <li><a href="Assignment.html">Class Assignments</a></li>
+        <li><a href="Help.html">Programming Resources</a></li>
+    </ul>
+</head>
+
+<body>
+
+<section>
+<p>Press the "Deal Cards" button to draw 3 random cards. Drag a card into the discard area to take it away fro the stack.<br/>
+     If you want to get new, press the button again until you are satisfied with your cards<br/>
+     Click the "Reset Cards" to restore the original deck.</p>
+<br/>
+<h><strong>Deal the Cards</strong>:</h>
+<br/>
+<button type="button" id="deal">Deal Cards</button>
+<button type="button" id="reset">Reset Cards</button>
+</section>
+
+<section>
+<div id="drop" class="drop">
+    <strong>Drop Discared Cards Here:</strong>
+</div>
+</section>
+
+<fieldset>
+    <h><strong>Your Hand:</strong></h>
+</fieldset>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.14.1/jquery-ui.min.js"></script>
+
+<script>
+    //Original list of available cards
+var cardInDeck = new Array();
+var numberOfCards = 15;
+var originalDeck=[];
+cardInDeck[0] = '2_of_clubs.svg';
+cardInDeck[1] = '3_of_spades.svg';
+cardInDeck[2] = '3_of_hearts.svg';
+cardInDeck[3] = 'queen_of_spades2.svg';
+cardInDeck[4] = '5_of_clubs.svg';
+cardInDeck[5] = '4_of_clubs.svg';
+cardInDeck[6] = '5_of_hearts.svg';
+cardInDeck[7] = '6_of_diamonds.svg';
+cardInDeck[8] = '4_of_diamonds.svg';
+cardInDeck[9] = '8_of_clubs.svg';
+cardInDeck[10] = '9_of_spades.svg';
+cardInDeck[11] = 'ace_of_clubs.svg';
+cardInDeck[12] = 'ace_of_spades.svg';
+cardInDeck[13] = 'jack_of_clubs2.svg';
+cardInDeck[14] = 'king_of_diamonds2.svg';
+
+//slice() helps creates a copy of the array, so the original card list stays available even affter the reset button is pressed
+originalDeck = cardInDeck.slice();
+
+// card/ = displys the cards in the card file 
+function dealCard(i) {
+    if (numberOfCards === 0) return;
+    var img = document.createElement('img');
+    img.src = 'card/' + cardInDeck[i];
+    img.alt = cardInDeck[i];
+    img.className = 'playing-card';
+
+    document.body.appendChild(img);
+
+    $(img).draggable({
+        revert: 'invalid',
+        containment: 'document',
+        stack: '.playing-card'
+    });
+
+    removeCard(i);
+}
+
+function randomCard() {
+    return Math.floor(Math.random() * numberOfCards);
+}
+
+function removeCard(c) {
+    for (j=c; j < numberOfCards - 1; j++) {
+        cardInDeck[j] = cardInDeck[j+1];
+    }
+    numberOfCards--;
+}
+
+
+$('#deal').on('click', function () {
+    for (var i = 0; i < 3; i++) {
+        if (numberOfCards === 0) breaks;
+        dealCard(randomCard());
+        }
+});
+
+
+$('#reset').click(function (){
+    //removes the cards displayed
+    $('.playing-card').remove();
+
+    //Restores the deck
+    cardInDeck = originalDeck.slice();
+
+    //Reset the number of cards
+    numberOfCards = cardInDeck.length;
+
+});
+
+$(function () {
+    $('#drop').droppable({
+        accept: '.playing-card',
+        drop: function (event, ui) {
+            ui.draggable.remove();
+        }
+    });
+});
+
+function handleDrop( event, ui) {
+    $('#drop').html( ui.draggable.attr('id'));
+}
+</script>
+</body>
+</html>
