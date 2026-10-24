@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+        <meta name="Description" content="Cole Bryant's COP4813 Web Systems Animate">
+        <meta name="keywords" content="COP4813, Animate, Cole Bryant, Web Systems">
+        <meta name="author" content="Cole Bryant">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <Title>COP4813 Website: Cole Bryant</Title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <h1>Animation</h1>
+
+    <ul class="menu">
+        <li><a href="Form.html">Login In</a></li>
+        <li><a href="index.html">Menu</a></li>
+        <li><a href="Assignment.html">Class Assignments</a></li>
+        <li><a href="Help.html">Programming Resources</a></li>
+    </ul>
+</head>
+<body>
+<section>
+<h>Website Animation:</h>
+<p>The object within the canvas will bounce from side to side to demostrate how animation works on a website.</p><br/>
+<p>To change the object's color, click on the object on the canvas below.</p>
+</section>
+
+<canvas id="canvas" width="1000" height="600" style="border:2px solid black;"></canvas>
+    <script>
+        let canvas = document.getElementById('canvas');
+        let context =  canvas.getContext('2d'); //a 2d program that lets you drae shapes, text, and images on the html canvas
+
+        //The 'let' list explains what each key will be in the program
+
+        let x = 450; // x position 
+        let speed = 2; //speed and direction of movement
+        let objectColor = 'black'; //the objectColor, connecting to the context.fillStyle key
+
+        // canvas.style.background = creates background for canvas
+        canvas.style.background = "#D3D3D3";
+
+        //context.fillRect(X = side by side, Y= up and down, W= width, H= height)
+        function animate() {
+         context.clearRect(0,0, canvas.width, canvas.height); //clears canvas, more specifically, removing each object super fast to make it look like it's moving
+         context.fillStyle = objectColor;
+         context.fillRect(x, 250, 100, 100);
+
+         x += speed; //updates the x coordinates, helping it move
+
+//Cause the object in the canvas to bounce on each side.
+         if (x + 100 > canvas.width || x < 0) { //When it hits the edge of the canvas, it will bounce off of it
+            speed = -speed;
+         }
+         requestAnimationFrame(animate); //this main program tells the computer to perform an animation, and asks to execute the animate program in it. Which contains the logic behind the programn such as style, drawings, etc.
+        }
+
+         //canvas.addEventListener = means that the event will take place within the canvas
+         canvas.addEventListener("click", function (event) {
+            const rect = canvas.getBoundingClientRect();
+            const mX = (event.clientX - rect.left) * canvas.width / rect.width;
+            const mY = (event.clientY - rect.top) * canvas.height / rect.height;
+
+// Check whether the click is inside the object
+            if (
+                mX >= x && //450 &&
+                mX <= x + 100 && //450 + size
+                mY >= 250 && //y &&
+                mY <= 250 + 100 //y + size
+            ) {
+            //The program below generates a random color sequence
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b =Math.floor(Math.random() * 256);
+
+            objectColor = `rgb(${r}, ${g}, ${b})`;
+
+            }
+            else (
+                //alerts the user that they need to press the object itself to make it change color.
+                console.log(alert('Please press inside the object to make it change color.'))
+            )
+        });
+
+// animate(): creates the animation of the program/ Basically starts it
+        animate();
+        
+    </script>
+
+<footer> <P>2026 Cole Bryant | COP4813 Web Systems </P> </footer>
+</body>
+</html>
