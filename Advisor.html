@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+          <meta name="Description" content="Cole Bryant's COP4813 Web Systems Advisor">
+          <meta name="keywords" content="COP4813, Advisor, Cole Bryant, Web Systems">
+          <meta name="author" content="Cole Bryant">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<Title>COP4813 Website: Cole Bryant</Title>
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.14.1/jquery-ui.min.js"></script>
+
+
+<h1>Dynamic Object Advisor: BSIET Planner</h1>
+
+<ul class="menu">
+    <li><a href="Form.html">Login In</a></li>
+    <li><a href="index.html">Menu</a></li>
+    <li><a href="Assignment.html">Class Assignments</a></li>
+    <li><a href="Help.html">Programming Resources</a></li>
+</ul>
+</head>
+<body>
+ <section>
+    <p>This advising rogram will allow students to drag and drop courses that they need for their program of study.<br/>
+    - To start off, drag one course you will be taking or have finished into completed courses or semester column. <br/>
+    - Drag your course to the left if you have already taken them<br/>
+    - Drag your course to the right if you want to add it to your schedule<br/>
+    - You can't add your prerequisites alongside your main course in the same semester<br/>
+    <!--<b style="">Word</style>: creates a style for a word within a sentence-->
+    - To take one of your clases out of either the completed course or Semester plan, press the <b style="font:bold">Undo</b> button in the white box above.<br/>
+    </p>
+ </section>
+
+ <!--div style="clear:left= makes all the elements move to the left of the screen with the div elements"-->
+ <div style="clear:left;">
+    <div class="greenbox">
+        Courses in green are draggable, showing their prerequisites have already been met.
+    </div>
+
+    <div class="whitebox">
+        Press the Undo button to remove the last course added to either the completed courses or semester plan.<br/>
+        <input type="button" value="Undo" id="undolist" class="button"/>
+    </div>
+
+    <div class="yellowbox">
+        Courses in yellow cannot be dragged because their prerequisites have not yet been yet.
+    </div>
+</div>
+
+<br/>
+<br/>
+<div style="clear:left">
+    <table>
+        <tr>
+            <th>Drag Complete Courses Here</th>
+            <th>All Courses for Program</th>
+            <th>Drag Semester Plan </th>
+        </tr>
+        <tr>
+            <td valign="top">
+                <div id="completed" class="completed">
+                    <div class="hours">
+                        <div id="completedHours"> <b style="font-style: bold">Hours Completed (128 hours required): </b> </div>
+                        <div id="ProgramHours"> <b style="font-style: bold">Program Hours (48 hours required): </b> </div>
+                    </div>
+                    <br/>
+                    <div id="completedclasses" class="completedclasses">
+                        <b>Completed Courses:</b>
+                        <br/>
+                    </div>
+                    <br/>
+                </div>
+            </td>
+
+            <td valign="top">
+                <div id="all">
+
+                </div>
+            </td>
+
+            <td valign="top">
+                <div id="available"> </div>
+                <div id="semester1" class="semester">
+                    <div id="semester1hours" class="hours">
+                        Semester 1 - Spring 2027:
+                    </div>
+                    <div id="semesterclasses1" class="semesterclasses">
+                </div>
+            <br/>
+                </div>
+                <br/>
+                <div id="semester2" class="semester">
+                    <div id="semester2hours" class="hours">
+                        Semester 2 - Summer 2027:
+                    </div>
+                    <div id="semesterclasses2" class="semesterclasses">
+                    </div>
+
+                    <br/>
+                </div>
+            <br/>
+        </div>
+        <br/>
+        <div id="semester3" class="semester">
+            <div id="semester3hours" class="hours">
+                Semester 3 - Fall 2027:
+            </div>
+            <div id="semesterclasses3" 
+            class="semesterclasses">
+            </div>
+
+            <br/>
+        </div>
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function() {
+        createListAll();
+        setDropTarget();
+
+        $("#undolist").on("click", executeUndo);
+    });
+
+//JSON List Below:
+    var courselist = [{
+    "Course": "MAC1105",
+    "Name": "College Algebra",
+    "taken": false,
+    "hours": 3,
+    "program": false,
+    "required": true,
+    "offered": "Fall, Spring, and Summer"
+},{
+    "Course": "MAC1114",
+    "Name": "Trigonometry",
+    "PreReq": ["MAC1105"],
+    "taken": false,
+    "hours": 3,
+    "program": false,
+    "required": true,
+    "offered": "Fall, Spring, and Summer"
+
+},{
+    "Course": "STA2023",
+    "Name": "Statistics",
+    "taken": false,
+    "hours": 3,
+    "program": false,
+    "required": true,
+    "offered": "Fall, Spring, and Summer"
+},{
+    "Course": "MAC1140",
+    "Name": "Pre-Calculus",
+    "PreReq": ["MAC1105"],
+    "taken": false,
+    "hours": 3,
+    "program": false,
+    "required": true,
+    "offered": "Fall and Summer"
+
+},{
+    "Course": "MAC2311C",
+    "Name": "Calculus I and Lab",
+    "PreReq": ["MAC1114","MAC1140"],
+    "taken": false,
+    "hours": 4,
+    "program": false,
+    "required": true,
+    "offered": "Fall, Spring, and Summer"
+
+},{
+    "Course": "MAC2312C",
+    "Name": "Calculus II and Lab",
+    "PreReq": ["MAC2311C"],
+    "taken": false,
+    "hours": 4,
+    "program": false,
+    "required": true,
+    "offered": "Fall, Spring, and Summer"
+},{
+    "Course": "MAC2313C",
+    "Name": "Calculus III and Lab",
+    "PreReq": ["MAC2312C"],
+    "taken": false,
+    "hours": 4,
+    "program": false,
+    "required": true,
+    "offered": "Fall, Spring, and Summer"
+},{
+    "Course": "MAP2302",
+    "Name": "Differential Equations and Lab",
+    "PreReq": ["MAC2312C"],
+    "taken": false,
+    "hours": 3,
+    "program": false,
+    "required": true,
+    "offered": "Fall, Spring, and Summer"
+},{
+    "Course": "PHY2048C",
+    "Name": "Physics with Calculus I",
+    "PreReq": ["MAC2311C"],
+    "taken": false,
+    "hours": 5,
+    "program": false,
+    "required": true,
+    "offered": "Fall and Spring"
+},{
+    "Course": "COT3100",
+    "Name": "Discrete Analysis",
+    "PreReq": ["MAC1105"],
+    "taken": false,
+    "hours": 3,
+    "program": false,
+    "required": true,
+    "offered": "Fall, Spring, and Summer"
+},{
+    "Course": "ENC1101",
+    "Name": "Intro to Composition",
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": true,
+    "offered": "Fall, Spring, and Summer"
+},{
+    "Course": "GEB3213",
+    "Name": "Business Writing",
+    "PreReq": ["ENC1101"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": true,
+    "offered": "Fall, Spring, and Summer"
+},{
+    "Course": "EET3085",
+    "Name": "Electricity and Electronics Lecture",
+    "PreReq": ["MAC1114"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": true,
+    "offered": "Fall, Spring, and Summer"
+},{
+    "Course": "ETI4205",
+    "Name": "Applied Logistics",
+    "PreReq": ["MAC1105"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": true,
+    "offered": "Fall"
+},{
+    "Course": "ETI3116",
+    "Name": "Engineering Quality Assurance",
+    "PreReq": ["STA2023", "EGN3443"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": true,
+    "offered": "Spring"
+},{
+    "Course": "EGN3443",
+    "Name": "Probability & Statistics for Engineers",
+    "PreReq": ["MAC2311C", "EGN3214"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": true,
+    "offered": "Fall"
+},{
+    "Course": "EGN3311",
+    "Name": "Statics",
+    "PreReq": ["MAC2311C", "PHY2048C"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": true,
+    "offered": "Fall and Spring"
+},{
+    "Course": "EGN3321",
+    "Name": "Dynamics",
+    "PreReq": ["EGN3311"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": true,
+    "offered": "Fall and Spring"
+},{
+    "Course": "ETI4186",
+    "Name": "Applied Reliability",
+    "PreReq": ["ETI3116"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": true,
+    "offered": "Fall"
+},{
+    "Course": "EGN3613",
+    "Name": "Engineering Economics Analysis",
+    "PreReq": ["MAC2311C"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": true,
+    "offered": "Spring and Summer"
+},{
+    "Course": "EGN3214",
+    "Name": "Programming for Engineers",
+    "PreReq": ["MAC2311C"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": true,
+    "offered": "Fall and Summer"
+},{
+    "Course": "EIN3314",
+    "Name": "Work Design & Measurments",
+    "PreReq": ["MAC1105"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": true,
+    "offered": "Spring"
+},{
+    "Course": "ESI4312",
+    "Name": "Operations Research",
+    "PreReq": ["MAC2313C", "EGN3443"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": true,
+    "offered": "Spring"
+},{
+    "Course": "ETS4502C",
+    "Name": "Metrology and Instrumentation and Lab",
+    "PreReq": ["EGN3311", "EET3085"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": true,
+    "offered": "Fall"
+},{
+    "Course": "ETI4448",
+    "Name": "PM and Senior Design I",
+    "PreReq": ["EGN3613"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": true,
+    "offered": "Fall"
+},{
+    "Course": "ETG4950C",
+    "Name": "PM and Senior Design II",
+    "PreReq": ["ETI4448"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": true,
+    "offered": "Spring"
+},{
+    "Course": "ETI3421",
+    "Name": "Materials and Processes",
+    "PreReq": ["MAC1114"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": false,
+    "offered": "Fall"
+},{
+    "Course": "ETM4220",
+    "Name": "Energy System",
+    "PreReq": ["MAC2311C"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": false,
+    "offered": "Spring"
+},{
+    "Course": "ETM4331",
+    "Name": "Applied Fluid Mechanics",
+    "PreReq": ["MAC2311C", "PHY2048C"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": false,
+    "offered": "Fall"
+},{
+    "Course": "ETI4704",
+    "Name": "Occupational Safety",
+    "PreReq": ["GEB3213"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": false,
+    "offered": "Summer"
+},{
+    "Course": "COP4708",
+    "Name": "Applied Databases",
+    "PreReq": ["EGN3214"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": false,
+    "offered": "Fall and Spring"
+},{
+    "Course": "CEN4801",
+    "Name": "System Integration",
+    "PreReq": ["COP4708", "COP3530"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": false,
+    "offered": "Fall"
+},{
+    "Course": "ETG3541",
+    "Name": "Applied Mechanics and Physics",
+    "PreReq": ["MAC1114"],
+    "taken": false,
+    "hours": 3,
+    "program": true,
+    "required": false,
+    "offered": "Summer"
+}];
+
+var startDrag;
+
+var semesterHours = [0, 0, 0, 0];
+var semester = [
+    [],
+    [],
+    [],
+    []
+];
+
+var undolist = [];
+
+var ProgramHours = 0;
+
+var coursesTaken = "";
+var coursesEnroll = "";
+
+function createListAll() {
+
+    $("#all").empty();
+    for (var i = 0; i < courselist.length; i++) {
+        addCourseToList(i);
+    }
+}
+
+function addCourseToList(i) {
+    if (prerequisitesMet(i)) {
+        addCoursePrequistesMet(i);
+    } else {
+        addCoursePrequistesNotMet(i);
+    }
+}
+
+function addCoursePrequistesMet(i) {
+    var a = $('<div />', {
+        id: i.toString(),
+        class: 'classAvailable',
+        //html: shows how the code will look in the course's tab in the web
+        html: courselist[i].Course + " " + courselist[i].Name + String.fromCharCode(10) + "<br/>" + courselist[i].offered,
+
+    });
+    $("#all").append(a);
+
+    $('#' + i).draggable({
+        start: function() {
+            startDrag = $(this).position();
+        }
+    })
+}
+
+function addCoursePrequistesNotMet(i) {
+    var a = $('<div />', {
+        id: i.toString(),
+        class: 'classNotAvailable',
+        html: courselist[i].Course + " " + courselist[i].Name + String.fromCharCode(10) + "<br/>" + courselist[i].offered,
+    });
+
+    $("#all").append(a);
+}
+
+function setDropTarget(){
+    $('#semester1').droppable({
+        drop: function(event, ui) {dropInSemester(ui,1); }
+    });
+    $('#semester2').droppable({
+        drop: function(event, ui) {dropInSemester(ui,2); }
+    });
+    $('#semester3').droppable({
+        drop: function(event, ui) {dropInSemester(ui,3); }
+    });
+
+    $('#completed').droppable({
+        drop: function(event, ui) {
+            var CourseID = ui.draggable.attr('id');
+            courselist[parseInt(CourseID)].taken = true;
+
+            semester[0].push(CourseID);
+            undolist.push({course: CourseID, semester: 0});
+
+            $('#completedclasses').html(semesterPrint(0));
+            $('#' + CourseID).hide();
+
+            semesterHours[0] += courselist[CourseID].hours;
+
+            if (courselist[CourseID].program) ProgramHours += courselist[CourseID].hours;
+
+            checkPrerequisites(CourseID, 0);
+            $("#completedHours").html("Hours Completed (128 hours required): " + semesterHours[0]);
+            $("#ProgramHours").html("Program Hours (48 hours required): " + ProgramHours);
+        }
+    });
+}
+
+function dropInSemester(ui,sid){
+    var id = ui.draggable.attr('id');
+    if (!dropSemester(id, sid)) {
+        ui.draggable.animate({
+            top: 0,
+            left: 0
+        }, "slow");
+    }
+}
+
+function dropSemester(CourseID, SemesterID){
+var Incourseid = parseInt(CourseID);
+var Insemesterid = parseInt(SemesterID);
+var target = "#semester" + SemesterID;
+
+if (okToTake(Incourseid, Insemesterid)) {
+   courselist[Incourseid].taken = true;
+   courselist[Incourseid].semester = Insemesterid;
+
+   semester[Insemesterid].push(Incourseid);
+   undolist.push({course: CourseID, semester: SemesterID});
+
+   $("#semesterclasses" + SemesterID).html(semesterPrint(SemesterID));
+   $("#" + CourseID).hide();
+
+   checkPrerequisites();
+
+   semesterHours[SemesterID] += courselist[CourseID].hours;
+   $('#semester' + SemesterID + "hours").html("Semester Hours: " + semesterHours[SemesterID])
+   return true;
+} else {
+    return false;
+}
+}
+
+function checkPrerequisites() {
+    for (var i = 0; i < courselist.length; i++) {
+
+        var course = $("#" + i);
+
+        if (courselist[i].taken) {
+            course.hide();
+            continue;
+        }
+
+        if (prerequisitesMet(i)) {
+            $('#' + i.toString()).css("background-color", "lightgreen");
+            $("#" + i.toString()).draggable();
+        }
+    }
+}
+
+function okToTake(CouID, SemeID) {
+    //CouID = course ID
+    //SemeID = semester ID
+    var PreReqArray = courselist[CouID].PreReq;
+    if (PreReqArray == null) return true;
+
+    PreReqArray = getAllPrerequisites(CouID, PreReqArray);
+
+    var _courses = semesterCourses(SemeID);
+
+    var checked = true;
+
+    for (var i = 0; i < PreReqArray.length; i++) {
+        for (var j = 0; j < _courses.length; j++) {
+            if (PreReqArray[i] == courselist[_courses[j]].Course){
+                checked = false;
+            }
+        }
+    }
+    return checked;
+}
+
+function semesterCourses(SemesterID) {
+    var _courses = [];
+    for (var i = 0; i < courselist.length; i++) {
+        if (courselist[i].semester == SemesterID) _courses.push(i);
+    }
+
+    return _courses;
+}
+
+function getAllPrerequisites(CouID, PreReqArray) {
+var coursePreReq = courselist[CouID].PreReq;
+if (coursePreReq == null) return [];
+
+for (var i = 0; i < coursePreReq.length; i++) {
+    var id = getIdFromCourseName(coursePreReq[i]);
+
+    if (courselist[id].PreReq == null) return PreReqArray;
+
+    PreReqArray = mergeArrays(PreReqArray, getAllPrerequisites(id, courselist[id].PreReq));
+}
+
+return PreReqArray;
+}
+
+function mergeArrays(a1, a2) {
+    for (var i = 0; i < a2.length; i++) {
+        if (!a1.includes(a2[i])) a1.push(a2[i]);
+    }
+    return a1;
+}
+
+function getIdFromCourseName(courseName) {
+    for (var i = 0; i < courselist.length; i++) {
+        if (courselist[i].Course == courseName) return i;
+    }
+    return 0;
+}
+
+function prerequisitesMet(CouID) {
+    var PreReqArray = courselist[parseInt(CouID)].PreReq;
+
+    if (PreReqArray == null) {
+        return true;
+    }
+
+    var checked = true;
+    for (var i = 0; i < PreReqArray.length; i++) {
+        if (!isTaken(PreReqArray[i])) {
+            checked = false;
+        }
+    }
+
+    return checked;
+}
+
+function isTaken(prereq) {
+    var taken = false;
+    for (var i = 0; i < courselist.length; i++) {
+        if ((courselist[i].Course == prereq) && (courselist[i].taken == true)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function semesterPrint() {
+    var str = "";
+    str += semesterHeaderPrint(1) + semesterPrint(1) + "Spring Semester: <br/>";
+    str += semesterHeaderPrint(2) + semesterPrint(2) + "Summer Semester: <br/>";
+    str += semesterHeaderPrint(3) + semesterPrint(3) + "Fall Semester: <br/>";
+
+    return str;
+}
+
+function semesterPrint(SemesterID) {
+    var s = "";
+    for (var i = 0; i < semester[SemesterID].length; i++) {
+        var CourseID = semester[SemesterID][i];
+        s += coursePrint(CourseID) + "<br/>";
+    }
+    return s;
+}
+
+function semesterHeaderPrint(SemesterID) {
+    var s = "<br/>Semester " + SemesterID + " ";
+    s += "Total hours: " + semesterHoursCount(SemesterID) + "<br/>";
+    return s;
+}
+
+function coursePrint(CourseID) {
+    return courselist[CourseID].Course + " " + courselist[CourseID].Name;
+}
+
+function semesterHoursCount(SemesterID) {
+    var tot = 0;
+    for (var i = 0; i < semester[SemesterID].length; i++) {
+        var CourseID = semester[SemesterID][i];
+        tot += courselist[CourseID].hours;
+    }
+    return tot;
+}
+
+$("#undolist").click(function() {executeUndo();});
+
+function executeUndo() {
+    if (undolist.length === 0) return;
+    var a = undolist.pop();
+    var CourseID = a.course; 
+    var SemesterID = a.semester;
+
+    //Removes the course from its semester
+    semester[SemesterID].pop();
+
+    //Mark the course not taken
+    courselist[CourseID].taken = false;
+    delete courselist[CourseID].semester;
+
+    $('#' + CourseID).show();
+    $('#' + CourseID).position({
+        my: "right bottom",
+        at: "right bottom",
+        of: "#all"
+    });
+
+    checkPrerequisites();
+
+    semesterHours[SemesterID] -= courselist[CourseID].hours;
+
+    if (courselist[CourseID].program) {
+        ProgramHours -= courselist[CourseID].hours;
+    }
+
+    $('#semester' + SemesterID + "hours").html("Semester Hours: " + semesterHours[SemesterID]);
+    if (SemesterID == 0){$("#completedclasses").html(semesterPrint(SemesterID));}
+    else {$("#semesterclasses" + SemesterID).html(semesterPrint(SemesterID));}
+}
+
+</script>
+
+<footer> <P>2026 Cole Bryant | COP4813 Web Systems </P></footer>
+</body>
+</html>
