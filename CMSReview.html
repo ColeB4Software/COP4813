@@ -52,7 +52,7 @@
         // webin.json = the json file with all my data in it
         fetch("webin.json")
         .then(respone => respone.json())
-        .then(myjson => {
+        .then(webin => {
             const table = document.getElementById("CMStable");
 
             //webin = name of json file.  search = name of info that stores data 
