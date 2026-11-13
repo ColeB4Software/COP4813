@@ -15,7 +15,7 @@
         "Support": "Open Source, Supported by other hosting companies",
         "Technology": "PHP/ MariaDB, MySQL",
         "Capabilities": "Supports themes, Supports plugins, Flexible designing",
-        "Limitations": "Secuirty risks from hackers, High maintenance costs, Performance issues, Less scalability, Lack of dedicated support",
+        "Limitations": "Security risks from hackers, High maintenance costs, Performance issues, Less scalability, Lack of dedicated support",
         "Example": "https://www.whitehouse.gov/",
         "Sources": "https://wordpress.org/, https://wordpress.org/about/requirements/, https://www.contentstack.com/blog/strategy/top-disadvantages-of-wordpress-what-you-need-to-know"
 
