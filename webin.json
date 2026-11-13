@@ -1,0 +1,54 @@
+{
+ "info": [
+    {
+        "Name": "Squarespace",
+        "Support": "Closed Source, manages your sites and files all on its own server.",
+        "Technology": "PostgreSQL/ Java, Python, Node.js",
+        "Capabilities": "Customizable templates, Fast response, Support plugins",
+        "Limitations": "Sites are not portable, Limitation on switching templates, Code injection for specific requirements",
+        "Example": "https://www.brewteacompany.co.uk/",
+        "Sources": "https://viralistic.nl/blog/en/what-is-squarespace, https://cmsdetect.com/cms/squarespace, https://www.contentstack.com/blog/strategy/top-disadvantages-of-wordpress-what-you-need-to-know?utm_source=chatgpt.com "
+
+    },
+    {
+        "Name": "WordPress",
+        "Support": "Open Source, Supported by other hosting companies",
+        "Technology": "PHP/ MariaDB, MySQL",
+        "Capabilities": "Supports themes, Supports plugins, Flexible designing",
+        "Limitations": "Secuirty risks from hackers, High maintenance costs, Performance issues, Less scalability, Lack of dedicated support",
+        "Example": "https://www.whitehouse.gov/",
+        "Sources": "https://wordpress.org/, https://wordpress.org/about/requirements/, https://www.contentstack.com/blog/strategy/top-disadvantages-of-wordpress-what-you-need-to-know"
+
+    },
+    {
+        "Name": "Shopify",
+        "Support": "Closed Source, supported directly by Shopify Inc.",
+        "Technology": "Ruby/MySQL",
+        "Capabilities": "User-Friendly platform, Scalability on projects, Wide range of third party apps, Mobile responsive",
+        "Limitations": "Inputting code needed for personal customizations, Limits on variants, Limits on product uploads, Limits on selling digital products, Slow updates, No preview for log updates",
+        "Example": "https://eastsideco.com/blog/63-biggest-names-and-brands-shopify",
+        "Sources": "https://talent500.com/blog/shopify-tech-stack-architecture/, https://www.ablestar.com/blog/6-shopify-limitations/"
+
+    },
+    {
+        "Name": "Joomla",
+        "Support": "Open Source, supported by other hosting compaines",
+        "Technology": "PHP/MySQL",
+        "Capabilities": "Intuitive usability, Adaptable with other hosting solution, Support plugins, High secruity and performance",
+        "Limitations": "Slow upgrades, Limited plugins and themes",
+        "Example": "https://www.joomla.org/",
+        "Sources": "https://www.ionos.com/digitalguide/hosting/cms/joomla-the-basics-about-this-open-source-cms/, https://razemedia.com/blog/should-website-developers-continue-using-joomla-in-2025/"
+
+    },
+    {
+        "Name": "Webflow",
+        "Support": "Closed Source, supported directly by Webflow Inc.",
+        "Technology": "MongoDB, Redis/React, TypeScript",
+        "Capabilities": "Security included, Marketing including, Fast to launch, Language built in",
+        "Limitations": "Cost per site, Limited display of items per page, No plugins, Hosting stays in webflow, Structured data is added by hand",
+        "Example": "https://thefurrow.tv/",
+        "Sources": "https://www.flowsamurai.com/post/is-webflow-open-source, https://www.uniqueside.io/tech-stack/webflow, https://www.designbase.studio/blog/webflow-pros-and-cons"
+
+    }
+ ]
+}

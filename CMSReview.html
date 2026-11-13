@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="Description" content="Cole Bryant COP4813 Web Systems CMS Review">
+        <meta name="keywords" content="COP4813, CMS Review, Cole Bryant, Web Systems">
+        <meta name="author" content="Cole Bryant">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <h2>CMS Review Table</h2>
+
+    <ul class="menu">
+        <li><a href="Form.html">Login In</a></li>
+        <li><a href="index.html">Menu</a></li>
+        <li><a href="Assignment.html">Class Assignments</a></li>
+        <li><a href="Help.html">Programming Resources</a></li>
+    </ul>
+    </head>
+    <body>
+    <section>
+        <p>This table below explains the top 5 CMS tables to use</p>
+        <br/>
+        <p>Name of System: <b>Name of the CMS </b><br/>
+        Support/Produced by: <b>The CMS support (Example: Open Source, Supported by Microsoft, etc.)</b><br/>
+        Technology Base: <b>The base technology STACK supporting the CMS (Database Layer, Client Software Layer)</b><br/>
+        Capabilities: <b>Major capabilities (Support for themes, plugins, custom templates, etc.)</b><br/>
+        Limitations: <b>Any noted limitations from your research</b><br/>
+        Example Site: <b>At least one example site that uses the CMS</b></p><br/>
+    
+        <h> Content Management Systems (CMS) Review Table: </h>
+    </section>
+    <table>
+        <thead>
+            <tr>
+                <th>Name of System:</th>
+                <th>Support/Produced by:</th>
+                <th>Technology Base:</th>
+                <th>Capabilities:</th>
+                <th>Limitations:</th>
+                <th>Example Site:</th>
+                <br>
+                <th>Sources:</th>
+            </tr>
+        </thead>
+
+        <tbody id="CMStable">
+        </tbody>
+    </table>
+    <footer> <P>2026 Cole Bryant | COP4813 Web Systes</P> </footer>
+
+    <script>
+        // webin.json = the json file with all my data in it
+        fetch("webin.json")
+        .then(respone => respone.json())
+        .then(myjson => {
+            const table = document.getElementById("CMStable");
+
+            //webin = name of json file.  search = name of info that stores data 
+            // name of json.name of stored data.forEach
+            webin.search.forEach(info => {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                <td>${info.Name}</td>
+                <td>${info.Support}</td>
+                <td>${info.Technology}</td>
+                <td>${info.Capabilities}</td>
+                <td>${info.Limitations}</td>
+                <td>${info.Example}</td>
+                <td>${info.Sources}</td>
+                `;
+
+                table.appendChild(row);
+
+            });
+        })
+
+    </script>
+    </body>
+    </html>
