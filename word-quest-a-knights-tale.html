@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="GamifyPlus">
+<title>Word Quest: A Knights Tale</title>
+<style>/*
+ * The look every GamifyPlus game shares. One stylesheet, built into each game's page: no CDN, no
+ * web font, nothing to load. It has to work on a ten-year-old classroom projector and on a phone
+ * held in one hand, in a bright room, so: large type, high contrast, big targets, and a layout
+ * that is one column when there is not room for two.
+ */
+
+:root {
+  --gp-bg: #f4f6f9;
+  --gp-card: #ffffff;
+  --gp-ink: #17212b;
+  --gp-muted: #55636f;
+  --gp-line: #cbd5de;
+  --gp-accent: #1f5fa8;
+  --gp-accent-ink: #ffffff;
+  --gp-ok: #1b7f4b;
+  --gp-ok-bg: #e6f5ec;
+  --gp-miss: #b4342a;
+  --gp-miss-bg: #fdeceb;
+  --gp-focus: #b8541f;
+  --gp-radius: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --gp-bg: #141a20;
+    --gp-card: #1d262f;
+    --gp-ink: #eef2f6;
+    --gp-muted: #a9b6c2;
+    --gp-line: #38444f;
+    --gp-accent: #6ea8e8;
+    --gp-accent-ink: #0d1319;
+    --gp-ok: #6bd39b;
+    --gp-ok-bg: #15301f;
+    --gp-miss: #f08a80;
+    --gp-miss-bg: #35191a;
+    --gp-focus: #f0a76a;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0 16px 48px;
+  background: var(--gp-bg);
+  color: var(--gp-ink);
+  font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.gp-app { max-width: 880px; margin: 0 auto; }
+
+.gp-head { padding: 24px 0 8px; }
+.gp-head h1 { margin: 0 0 4px; font-size: 1.75rem; line-height: 1.2; }
+.gp-sub { margin: 0; color: var(--gp-muted); }
+
+.gp-card {
+  background: var(--gp-card);
+  border: 1px solid var(--gp-line);
+  border-radius: var(--gp-radius);
+  padding: 20px 22px;
+  margin: 16px 0;
+}
+
+.gp-card h2 { margin: 0 0 12px; font-size: 1.3rem; }
+.gp-card h3 { margin: 18px 0 8px; font-size: 1.05rem; }
+
+.gp-how ul { margin: 0; padding-left: 22px; }
+.gp-how li { margin-bottom: 4px; }
+
+.gp-gate { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-top: 16px; }
+.gp-gate label { font-weight: 600; }
+.gp-gate .gp-button { min-width: 160px; }
+
+.gp-name-input,
+.gp-text-input {
+  font: inherit;
+  padding: 10px 12px;
+  border: 1px solid var(--gp-line);
+  border-radius: 8px;
+  background: var(--gp-card);
+  color: var(--gp-ink);
+  max-width: 420px;
+}
+
+.gp-note { margin: 4px 0; color: var(--gp-muted); font-size: 0.92rem; }
+
+.gp-error {
+  margin: 4px 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--gp-miss-bg);
+  color: var(--gp-miss);
+  font-weight: 600;
+}
+
+.gp-problem { padding: 16px; background: var(--gp-miss-bg); color: var(--gp-miss); border-radius: 8px; }
+
+/* Buttons are the whole interface in most of these games, so they are deliberately large. */
+.gp-button {
+  font: inherit;
+  font-weight: 600;
+  padding: 12px 18px;
+  min-height: 48px;
+  margin: 8px 8px 0 0;
+  border: 1px solid var(--gp-line);
+  border-radius: 8px;
+  background: var(--gp-card);
+  color: var(--gp-ink);
+  cursor: pointer;
+}
+
+.gp-button:hover { border-color: var(--gp-accent); }
+
+.gp-button:focus-visible,
+.gp-name-input:focus-visible,
+.gp-text-input:focus-visible {
+  outline: 3px solid var(--gp-focus);
+  outline-offset: 2px;
+}
+
+.gp-primary { background: var(--gp-accent); color: var(--gp-accent-ink); border-color: var(--gp-accent); }
+.gp-button[disabled] { opacity: 0.55; cursor: default; }
+
+/* One answer per row on a phone, two across when there is room. */
+.gp-options { display: grid; gap: 10px; margin: 16px 0 0; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .gp-options { grid-template-columns: 1fr 1fr; } }
+
+.gp-option {
+  text-align: left;
+  width: 100%;
+  margin: 0;
+  white-space: normal;
+}
+
+.gp-option.gp-chosen-ok { background: var(--gp-ok-bg); border-color: var(--gp-ok); color: var(--gp-ok); }
+.gp-option.gp-chosen-miss { background: var(--gp-miss-bg); border-color: var(--gp-miss); color: var(--gp-miss); }
+
+.gp-question { font-size: 1.2rem; font-weight: 600; margin: 0 0 4px; }
+.gp-prompt-image { max-width: 100%; height: auto; border-radius: 8px; margin: 12px 0; }
+
+.gp-meta { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; color: var(--gp-muted); }
+.gp-meta progress { width: 180px; height: 12px; }
+
+.gp-status { min-height: 1.6em; margin: 12px 0 0; font-weight: 600; }
+
+.gp-feedback { margin: 14px 0 0; padding: 12px 14px; border-radius: 8px; }
+.gp-feedback.gp-ok { background: var(--gp-ok-bg); color: var(--gp-ok); }
+.gp-feedback.gp-miss { background: var(--gp-miss-bg); color: var(--gp-miss); }
+
+.gp-score { font-size: 1.4rem; margin: 0 0 4px; }
+.gp-who { margin: 0 0 12px; color: var(--gp-muted); }
+
+.gp-review-list { list-style: none; margin: 0; padding: 0; }
+.gp-review-list li { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--gp-line); }
+.gp-review-list li:last-child { border-bottom: 0; }
+.gp-mark { font-weight: 700; }
+.gp-review-list .gp-ok .gp-mark { color: var(--gp-ok); }
+.gp-review-list .gp-miss .gp-mark { color: var(--gp-miss); }
+
+.gp-receipt { margin-top: 22px; padding-top: 18px; border-top: 2px solid var(--gp-line); }
+
+.gp-receipt-line {
+  display: block;
+  font-family: Consolas, "SFMono-Regular", Menlo, monospace;
+  font-size: 0.95rem;
+  word-break: break-all;
+  padding: 12px 14px;
+  margin: 10px 0;
+  background: var(--gp-bg);
+  border: 1px dashed var(--gp-line);
+  border-radius: 8px;
+  user-select: all;
+}
+
+/* Matching and sorting games share these. */
+.gp-grid { display: grid; gap: 10px; grid-template-columns: repeat(2, 1fr); margin-top: 16px; }
+@media (min-width: 640px) { .gp-grid { grid-template-columns: repeat(4, 1fr); } }
+.gp-tile { min-height: 84px; }
+
+/* Picking and matching happen on .gp-option buttons — a tile that looks no different after a
+   click tells the student nothing, whatever the status line says. */
+.gp-option.gp-matched,
+.gp-tile.gp-matched {
+  background: var(--gp-ok-bg);
+  border-color: var(--gp-ok);
+  color: var(--gp-ok);
+  cursor: default;
+  opacity: 1;
+}
+
+.gp-option.gp-picked,
+.gp-tile.gp-picked {
+  border-color: var(--gp-accent);
+  border-width: 2px;
+  box-shadow: 0 0 0 2px var(--gp-accent);
+}
+
+/* A matched pair is finished, not unavailable: it keeps its green rather than fading out. */
+.gp-button[disabled].gp-matched { opacity: 1; }
+
+.gp-bins { display: grid; gap: 12px; grid-template-columns: 1fr; margin-top: 16px; }
+@media (min-width: 640px) { .gp-bins { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
+.gp-bin { border: 1px solid var(--gp-line); border-radius: var(--gp-radius); padding: 12px; background: var(--gp-card); }
+.gp-bin h3 { margin: 0 0 8px; }
+.gp-bin-items { list-style: none; margin: 0; padding: 0; min-height: 40px; }
+.gp-bin-items li { padding: 6px 8px; border-radius: 6px; background: var(--gp-bg); margin-bottom: 6px; }
+
+.gp-foot {
+  margin: 32px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--gp-line);
+  color: var(--gp-muted);
+  font-size: 0.85rem;
+}
+
+/* ── True or False: the optional timer ──────────────────────────────────────── */
+
+.gp-timer { display: block; width: 100%; height: 8px; margin-top: 14px; }
+
+/* ── Fill the Blank: the gap inside the sentence ────────────────────────────── */
+
+.gp-blank {
+  display: inline-block;
+  min-width: 90px;
+  padding: 0 6px;
+  border-bottom: 3px solid var(--gp-accent);
+}
+
+.gp-blank-filled { color: var(--gp-ok); font-weight: 700; border-bottom-color: var(--gp-ok); }
+
+/* ── Cloze Passage: notes with boxes in them ────────────────────────────────── */
+
+.gp-passage { line-height: 2.1; margin: 4px 0 14px; }
+
+.gp-blank-input {
+  font: inherit;
+  font-size: 0.95em;
+  padding: 2px 6px;
+  margin: 0 2px;
+  border: 1px solid var(--gp-line);
+  border-bottom: 2px solid var(--gp-accent);
+  border-radius: 4px;
+  background: var(--gp-bg);
+  color: var(--gp-ink);
+}
+
+.gp-blank-input:focus-visible { outline: 3px solid var(--gp-focus); outline-offset: 1px; }
+
+/* Right and locked is the only state change — a box being typed into is not a mistake. */
+.gp-blank-ok {
+  background: var(--gp-ok-bg);
+  border-color: var(--gp-ok);
+  color: var(--gp-ok);
+  font-weight: 700;
+}
+
+.gp-blank-shown { background: var(--gp-miss-bg); border-color: var(--gp-miss); color: var(--gp-miss); }
+
+/* ── Flashcard Flip ─────────────────────────────────────────────────────────── */
+
+.gp-flashcard {
+  border: 1px solid var(--gp-line);
+  border-radius: var(--gp-radius);
+  background: var(--gp-bg);
+  padding: 28px 22px;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.gp-flashcard-back { background: var(--gp-card); border-color: var(--gp-accent); }
+.gp-flashcard-answer { margin: 12px 0 0; font-size: 1.05rem; }
+
+/* ── Memory Match: a card that is face down ─────────────────────────────────── */
+
+.gp-face-down { color: var(--gp-muted); font-weight: 400; background: var(--gp-bg); }
+
+/* ── Number Line ────────────────────────────────────────────────────────────── */
+
+.gp-line-input { width: 100%; margin: 22px 0 4px; height: 32px; }
+.gp-line-input:focus-visible { outline: 3px solid var(--gp-focus); outline-offset: 4px; }
+
+.gp-line-ends { display: flex; justify-content: space-between; color: var(--gp-muted); font-size: 0.9rem; }
+.gp-line-reading { font-weight: 700; color: var(--gp-ink); }
+
+.gp-line-answer {
+  position: relative;
+  height: 46px;
+  margin: 18px 0 0;
+  border-top: 3px solid var(--gp-line);
+}
+
+.gp-line-mark { position: absolute; transform: translateX(-50%); font-size: 1.1rem; }
+.gp-line-mine { top: -26px; color: var(--gp-accent); }
+.gp-line-real { top: 4px; color: var(--gp-ok); }
+
+/* ── Crossword ──────────────────────────────────────────────────────────────── */
+
+.gp-crossword { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; margin-top: 14px; }
+
+.gp-grid-table { border-collapse: collapse; }
+.gp-grid-table td { width: 34px; height: 34px; padding: 0; }
+
+.gp-cell-block { background: transparent; }
+
+.gp-cell {
+  position: relative;
+  border: 1px solid var(--gp-ink);
+  background: var(--gp-card);
+}
+
+.gp-cell-number {
+  position: absolute;
+  top: 0;
+  left: 2px;
+  font-size: 9px;
+  line-height: 1;
+  color: var(--gp-muted);
+  pointer-events: none;
+}
+
+.gp-cell-input {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--gp-ink);
+  text-align: center;
+  text-transform: uppercase;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0;
+}
+
+.gp-cell-input:focus { outline: 2px solid var(--gp-focus); outline-offset: -2px; }
+.gp-cell-current { background: rgba(31, 95, 168, 0.12); }
+.gp-cell-ok { background: var(--gp-ok-bg); color: var(--gp-ok); }
+
+.gp-clues { display: flex; flex-wrap: wrap; gap: 24px; flex: 1 1 260px; }
+.gp-clue-list { flex: 1 1 240px; }
+.gp-clue-list h3 { margin: 0 0 6px; }
+.gp-clue-items { list-style: none; margin: 0; padding: 0; }
+
+.gp-clue {
+  font: inherit;
+  text-align: left;
+  width: 100%;
+  padding: 5px 6px;
+  margin: 0 0 2px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--gp-ink);
+  cursor: pointer;
+}
+
+.gp-clue:hover { background: var(--gp-bg); }
+.gp-clue:focus-visible { outline: 3px solid var(--gp-focus); outline-offset: 1px; }
+.gp-clue-current { background: rgba(31, 95, 168, 0.12); font-weight: 600; }
+.gp-clue-done { color: var(--gp-ok); text-decoration: line-through; }
+
+@media (max-width: 560px) {
+  .gp-grid-table td { width: 28px; height: 28px; }
+  .gp-cell-input { font-size: 0.85rem; }
+}
+
+/* -- What's the Word: two rows of letter boxes, racing ---------------------- */
+
+.gp-race-score { margin-left: auto; font-weight: 700; color: var(--gp-ink); }
+
+.gp-race-row { display: flex; align-items: center; gap: 12px; margin: 16px 0; flex-wrap: wrap; }
+.gp-race-who { min-width: 84px; font-weight: 600; color: var(--gp-muted); }
+.gp-race-boxes { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.gp-race-box {
+  width: 44px;
+  height: 52px;
+  border: 2px solid var(--gp-line);
+  border-radius: 8px;
+  background: var(--gp-card);
+  color: var(--gp-ink);
+  font: inherit;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 0;
+}
+
+.gp-race-box:focus-visible { outline: 3px solid var(--gp-focus); outline-offset: 2px; }
+.gp-race-box-theirs { background: var(--gp-bg); }
+.gp-race-box-ok { background: var(--gp-ok-bg); border-color: var(--gp-ok); color: var(--gp-ok); }
+
+/* Red here on purpose: the letter is the answer, and it is being raced. */
+.gp-race-box-wrong { background: var(--gp-miss-bg); border-color: var(--gp-miss); color: var(--gp-miss); }
+
+/* What was still blank when the word ended, filled in so it can be read. */
+.gp-race-box-late { color: var(--gp-muted); border-style: dashed; }
+
+@media (max-width: 560px) {
+  .gp-race-box { width: 34px; height: 44px; font-size: 1.05rem; }
+  .gp-race-who { min-width: 0; }
+}
+
+/* -- Sequence Builder: the order being built, and the steps left to place --- */
+
+.gp-sequence { list-style: decimal; margin: 14px 0; padding-left: 30px; }
+.gp-sequence li { margin-bottom: 6px; }
+
+.gp-sequence-step {
+  display: block;
+  width: 100%;
+  text-align: left;
+  white-space: normal;
+  margin: 0;
+  min-height: 0;
+  padding: 10px 14px;
+}
+
+/* The steps not yet placed, as a block of their own below the order. */
+.gp-sequence-pool {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr;
+  margin: 16px 0;
+  padding-top: 14px;
+  border-top: 1px dashed var(--gp-line);
+}
+
+@media (min-width: 640px) { .gp-sequence-pool { grid-template-columns: 1fr 1fr; } }
+
+.gp-sequence-where { font-weight: 400; opacity: 0.85; }
+.gp-sequence-answer { margin-top: 18px; }
+
+/* ------------------------------------------------------------ the character
+ * Professor Ron (was Professor Stick): a drawing and a speech bubble above the game. Decoration only (the runtime
+ * makes it aria-hidden and every word in the bubble is also in the status line). Drawn in the
+ * page's own ink, so dark mode needs nothing of its own. */
+
+.gp-character {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 14px;
+  align-items: end;
+  margin: 8px 0 16px;
+}
+.gp-figure svg { width: 100%; height: auto; display: block; overflow: visible; }
+.gp-figure .gp-line {
+  stroke: var(--gp-ink); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; fill: none;
+}
+.gp-figure .gp-head { fill: var(--gp-card); }
+.gp-figure .gp-dot, .gp-figure .gp-cap { fill: var(--gp-ink); }
+.gp-figure .gp-tassel { stroke: var(--gp-accent); stroke-width: 3; stroke-linecap: round; fill: none; }
+.gp-figure .gp-cheek { fill: var(--gp-accent); opacity: 0; }
+/* Professor Ron's face is coloured, so its features stay dark in dark mode too: the page's ink turns
+   light there, and light eyes on skin would disappear. */
+.gp-figure .gp-face { color: #2f3542; }
+.gp-figure .gp-face .gp-dot { fill: #2f3542; }
+.gp-figure .gp-face .gp-line { stroke: #2f3542; }
+
+/* One mouth, one arm and one pair of eyes at a time, chosen by the mood. */
+.gp-figure .gp-m, .gp-figure .gp-arm, .gp-figure .gp-eyes-up { display: none; }
+.gp-mood-talk .gp-m-talk, .gp-mood-happy .gp-m-happy,
+.gp-mood-sorry .gp-m-sorry, .gp-mood-thinking .gp-m-thinking { display: inline; }
+.gp-mood-talk .gp-arm-point, .gp-mood-sorry .gp-arm-down,
+.gp-mood-happy .gp-arm-up, .gp-mood-thinking .gp-arm-chin { display: inline; }
+.gp-mood-thinking .gp-eyes { display: none; }
+.gp-mood-thinking .gp-eyes-up { display: inline; }
+.gp-mood-happy .gp-cheek { opacity: 0.35; }
+
+.gp-mood-happy .gp-figure svg { animation: gp-hop 0.5s ease-out 2; }
+.gp-mood-talk .gp-m-talk {
+  animation: gp-talk 0.28s ease-in-out 6 alternate;
+  transform-origin: 60px 55px;
+  transform-box: view-box;
+}
+@keyframes gp-hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-12px); } }
+@keyframes gp-talk { from { transform: scaleY(0.4); } to { transform: scaleY(1); } }
+
+.gp-bubble {
+  position: relative;
+  background: var(--gp-card);
+  border: 2px solid var(--gp-ink);
+  border-radius: 18px 18px 18px 4px;
+  padding: 14px 18px;
+  min-height: 96px;
+  margin-bottom: 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+.gp-bubble::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  bottom: 20px;
+  width: 16px;
+  height: 16px;
+  background: var(--gp-card);
+  border-left: 2px solid var(--gp-ink);
+  border-bottom: 2px solid var(--gp-ink);
+  transform: rotate(45deg);
+}
+.gp-bubble-who {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gp-muted);
+}
+.gp-bubble-say { margin: 0; font-size: 1.2rem; line-height: 1.35; }
+
+@media (max-width: 560px) {
+  .gp-character { grid-template-columns: 72px 1fr; gap: 10px; }
+  .gp-bubble { min-height: 80px; padding: 10px 14px; margin-bottom: 32px; }
+  .gp-bubble-say { font-size: 1.05rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gp-mood-happy .gp-figure svg, .gp-mood-talk .gp-m-talk { animation: none; }
+}
+
+@media print {
+  body { background: #fff; color: #000; }
+  .gp-button { display: none; }
+  .gp-card { border: 1px solid #999; }
+  .gp-character { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="gp-app">
+  <header class="gp-head">
+    <h1 id="gp-title">Word Quest: A Knights Tale</h1>
+    <p class="gp-sub" id="gp-sub"></p>
+  </header>
+  <main id="gp-main"></main>
+  <footer class="gp-foot"><span id="gp-foot-course"></span> Made with Gamify+.</footer>
+</div>
+
+<script id="gp-game" type="application/json">{
+  "schema": 1,
+  "title": "Word Quest: A Knights Tale",
+  "slug": "word-quest-a-knights-tale",
+  "type": "fill-the-blank",
+  "course": "Untitled game file",
+  "description": "Spell the proper words in the sentences so that the knight can complete his quest.",
+  "outcome": "Students will learn about how to spell words properly in sentences.",
+  "asksForName": true,
+  "howToPlay": [
+    "You get a sentence with one word missing.",
+    "Type the missing word - or, if choices are turned on for this game, pick it from the buttons.",
+    "Capitals, spaces and punctuation do not matter; the word does.",
+    "One point per sentence. At the end you get your score and a line to hand in."
+  ],
+  "itemNoun": "sentence",
+  "settings": {
+    "showChoices": false,
+    "shuffle": false,
+    "sentencesPerRound": 0
+  },
+  "items": [
+    {
+      "sentence": "The knight was ___ to head to the king\u0027s castle.",
+      "answer": "alerted",
+      "why": "alerted: notify someone or something, or to report an event"
+    },
+    {
+      "sentence": "The king told the knight a dragon was ___ treasure chest in the woods.",
+      "answer": "guarding",
+      "why": "guarding: to watch over , protect, or defend a person, place, object, or idea from harm, loss, or interference."
+    },
+    {
+      "sentence": "The knight made his way through the woods riding his white ___.",
+      "answer": "horse",
+      "why": "horse: a animal used for riding or travel across large distances"
+    },
+    {
+      "sentence": "The knight saw the dragon ___ in the cave, while the treasure was right beside it.",
+      "answer": "sleeping",
+      "why": "sleeping: resting with your eyes closed; in a unawake state."
+    },
+    {
+      "sentence": "The knight ___ sneaked past the dragon.",
+      "answer": "carefully",
+      "why": "carefully: avoding any mistakes, harm, or dangers"
+    },
+    {
+      "sentence": "As soon as the knight got to the treasure, the dragon ___.",
+      "answer": "awoke",
+      "why": "awoke: stop sleeping"
+    },
+    {
+      "sentence": "The dragon breathed hot ___ to the knight as soon as it saw him.",
+      "answer": "fire",
+      "why": "fire: flame"
+    },
+    {
+      "sentence": "The knight pulled out his ___ to guard himself from the dragon\u0027s attack.",
+      "answer": "shield",
+      "why": "shield: to protect or guard someone or something from a attack"
+    },
+    {
+      "sentence": "The flame ___ off and hit the dragon\u0027s face, knocking him out.",
+      "answer": "bounce",
+      "why": "bounce: to spring back after hitting a surface"
+    },
+    {
+      "sentence": "With the dragon defeated, the knight celebrated his ___ for getting the treasure.",
+      "answer": "victory",
+      "why": "victory: achieving a success in a struggle, battle, or quest."
+    }
+  ],
+  "gameKey": "ad5d0086f6d7a7d909c6da68903556451de30237aef1af76cc57c4c0cff4c09f"
+}</script>
+<script>/*
+ * GamifyPlus game runtime.
+ *
+ * Every built game carries this file inside it. It owns everything that is the same in every
+ * game — the name gate, the timer, the score, the result panel and the completion code — so a
+ * game type's own template is only the part that is actually the game.
+ *
+ * Three rules it lives by:
+ *   1. Nothing is fetched. No CDN, no web font, no server. The page works from a memory stick.
+ *   2. The completion code is made the same way GamifyPlus makes it in C#
+ *      (src/GamifyPlus.Core/Verify/CompletionCode.cs). CompletionCodeTests runs this file under
+ *      Node and fails if the two ever disagree.
+ *   3. Nothing here tells a student something comforting and wrong. The code proves the game was
+ *      played through under that name; it is not exam security, and the app says so.
+ */
+(function (root) {
+  'use strict';
+
+  var GP = {};
+
+  /* ---------------------------------------------------------------- SHA-256 */
+
+  var K = [
+    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+    0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+    0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+    0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+    0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+    0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+    0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+  ];
+
+  function rotr(x, n) { return (x >>> n) | (x << (32 - n)); }
+
+  function sha256(bytes) {
+    var h = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+             0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19];
+
+    var length = bytes.length;
+    var withPadding = new Uint8Array((((length + 8) >> 6) + 1) << 6);
+    withPadding.set(bytes);
+    withPadding[length] = 0x80;
+
+    var bits = length * 8;
+    var view = new DataView(withPadding.buffer);
+    view.setUint32(withPadding.length - 4, bits >>> 0);
+    view.setUint32(withPadding.length - 8, Math.floor(bits / 4294967296));
+
+    var w = new Int32Array(64);
+
+    for (var offset = 0; offset < withPadding.length; offset += 64) {
+      var i;
+      for (i = 0; i < 16; i++) {
+        w[i] = view.getUint32(offset + i * 4);
+      }
+      for (i = 16; i < 64; i++) {
+        var s0 = rotr(w[i - 15], 7) ^ rotr(w[i - 15], 18) ^ (w[i - 15] >>> 3);
+        var s1 = rotr(w[i - 2], 17) ^ rotr(w[i - 2], 19) ^ (w[i - 2] >>> 10);
+        w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
+      }
+
+      var a = h[0], b = h[1], c = h[2], d = h[3], e = h[4], f = h[5], g = h[6], hh = h[7];
+
+      for (i = 0; i < 64; i++) {
+        var S1 = rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25);
+        var ch = (e & f) ^ (~e & g);
+        var t1 = (hh + S1 + ch + K[i] + w[i]) | 0;
+        var S0 = rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22);
+        var maj = (a & b) ^ (a & c) ^ (b & c);
+        var t2 = (S0 + maj) | 0;
+
+        hh = g; g = f; f = e; e = (d + t1) | 0;
+        d = c; c = b; b = a; a = (t1 + t2) | 0;
+      }
+
+      h[0] = (h[0] + a) | 0; h[1] = (h[1] + b) | 0; h[2] = (h[2] + c) | 0; h[3] = (h[3] + d) | 0;
+      h[4] = (h[4] + e) | 0; h[5] = (h[5] + f) | 0; h[6] = (h[6] + g) | 0; h[7] = (h[7] + hh) | 0;
+    }
+
+    var out = new Uint8Array(32);
+    var outView = new DataView(out.buffer);
+    for (var j = 0; j < 8; j++) {
+      outView.setUint32(j * 4, h[j] >>> 0);
+    }
+
+    return out;
+  }
+
+  function hmac(key, message) {
+    var block = new Uint8Array(64);
+
+    if (key.length > 64) {
+      block.set(sha256(key));
+    } else {
+      block.set(key);
+    }
+
+    var inner = new Uint8Array(64 + message.length);
+    var outer = new Uint8Array(64 + 32);
+
+    for (var i = 0; i < 64; i++) {
+      inner[i] = block[i] ^ 0x36;
+      outer[i] = block[i] ^ 0x5c;
+    }
+
+    inner.set(message, 64);
+    outer.set(sha256(inner), 64);
+
+    return sha256(outer);
+  }
+
+  function utf8(text) { return new TextEncoder().encode(text); }
+
+  /* ------------------------------------------------------- completion codes */
+
+  var ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+
+  function base32(bytes, characters) {
+    var text = '';
+    var buffer = 0;
+    var bits = 0;
+
+    for (var i = 0; i < bytes.length && text.length < characters; i++) {
+      buffer = (buffer * 256) + bytes[i];
+      bits += 8;
+
+      while (bits >= 5 && text.length < characters) {
+        bits -= 5;
+        text += ALPHABET[Math.floor(buffer / Math.pow(2, bits)) & 31];
+      }
+
+      buffer = buffer % Math.pow(2, bits);
+    }
+
+    return text;
+  }
+
+  /** Trimmed, runs of whitespace collapsed, lower case — as CompletionCode.NormaliseName. */
+  GP.normaliseName = function (name) {
+    return String(name == null ? '' : name).trim().replace(/\s+/g, ' ').toLowerCase();
+  };
+
+  GP.today = function () {
+    var now = new Date();
+    function two(n) { return (n < 10 ? '0' : '') + n; }
+    return now.getFullYear() + '-' + two(now.getMonth() + 1) + '-' + two(now.getDate());
+  };
+
+  GP.canonical = function (name, gameSlug, score, max, date) {
+    return ['GP1', GP.normaliseName(name), String(gameSlug || '').trim().toLowerCase(),
+            String(score), String(max), date].join('|');
+  };
+
+  function hex(bytes) {
+    var text = '';
+    for (var i = 0; i < bytes.length; i++) {
+      text += (bytes[i] < 16 ? '0' : '') + bytes[i].toString(16);
+    }
+    return text;
+  }
+
+  function unhex(text) {
+    var clean = String(text || '').trim();
+    var bytes = new Uint8Array(Math.floor(clean.length / 2));
+    for (var i = 0; i < bytes.length; i++) {
+      bytes[i] = parseInt(clean.substr(i * 2, 2), 16);
+    }
+    return bytes;
+  }
+
+  GP.hex = hex;
+  GP.unhex = unhex;
+
+  /**
+   * The key one game signs with, derived from the course key — as CompletionCode.GameKey.
+   * A built game carries only this derived key, never the course key, so taking one game's page
+   * apart does not give away the rest of the course.
+   */
+  GP.gameKeyHex = function (courseKey, gameSlug) {
+    return hex(hmac(utf8(String(courseKey || '')), utf8('gp-game:' + String(gameSlug || ''))));
+  };
+
+  GP.completionCode = function (gameKeyHex, name, gameSlug, score, max, date) {
+    var mac = hmac(unhex(gameKeyHex), utf8(GP.canonical(name, gameSlug, score, max, date)));
+    var code = base32(mac, 12);
+    return code.slice(0, 4) + '-' + code.slice(4, 8) + '-' + code.slice(8);
+  };
+
+  GP.receiptLine = function (gameKeyHex, name, gameSlug, score, max, date) {
+    return ['GP1', String(name).trim(), gameSlug, score + '/' + max, date,
+            GP.completionCode(gameKeyHex, name, gameSlug, score, max, date)].join('|');
+  };
+
+  /* ------------------------------------------------------------- small tools */
+
+  GP.escape = function (text) {
+    return String(text == null ? '' : text)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  };
+
+  /** Fisher–Yates on a copy, so the caller's list keeps its order. */
+  GP.shuffle = function (items) {
+    var copy = items.slice();
+    for (var i = copy.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var swap = copy[i]; copy[i] = copy[j]; copy[j] = swap;
+    }
+    return copy;
+  };
+
+  GP.el = function (tag, className, text) {
+    var node = document.createElement(tag);
+    if (className) { node.className = className; }
+    if (text != null) { node.textContent = text; }
+    return node;
+  };
+
+  GP.clear = function (node) {
+    while (node.firstChild) { node.removeChild(node.firstChild); }
+    return node;
+  };
+
+  /** Seconds as m:ss, for the timer and the result line. */
+  GP.clock = function (seconds) {
+    var m = Math.floor(seconds / 60);
+    var s = Math.floor(seconds % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  };
+
+  /* ------------------------------------------------------------ the character */
+
+  /*
+   * Professor Ron — Professor Stick until 2026-09-25, drawn after the one in Ron's Dependence game. A game file
+   * chooses him per game (Game ▸ Properties ▸ Character); when it does, he stands above the game
+   * and says aloud what the status line says, with a face to match.
+   *
+   * The rule he lives by: HE NEVER CARRIES INFORMATION THE PAGE DOES NOT. Every word in his bubble
+   * is also in the status line (which a screen reader hears), or is only a greeting. The drawing
+   * and the bubble are aria-hidden, so a screen reader hears everything once and loses nothing.
+   *
+   * Moods: 'talk' (the default), 'happy' (right), 'sorry' (wrong), 'thinking' (your turn, or try
+   * again). A type passes one as the second argument of api.say; one that does not gets 'talk'.
+   */
+  var CHARACTERS = {
+    // Professor Ron (Ron, 2026-09-25): Professor Stick with Ron Eaglin's face, simplified from the
+    // picture on About — bald crown, grey fringe, white beard with a drooping moustache. The id
+    // stays 'professor-stick', because every page built before the rename says so.
+    'professor-stick': {
+      name: 'Professor Ron',
+      svg:
+        '<svg viewBox="0 0 120 220" focusable="false" style="color:var(--gp-ink)">' +
+        '<path class="gp-line" d="M60 72 L60 145"/><path class="gp-line" d="M60 145 L40 205 M60 145 L80 205"/>' +
+        '<path class="gp-line" d="M60 92 L36 125"/>' +
+        '<path class="gp-line gp-arm gp-arm-point" d="M60 92 L92 72 L110 54"/>' +
+        '<path class="gp-line gp-arm gp-arm-chin" d="M60 92 L84 86 L72 70"/>' +
+        '<path class="gp-line gp-arm gp-arm-up" d="M60 92 L88 64 L96 32"/>' +
+        '<path class="gp-line gp-arm gp-arm-down" d="M60 92 L82 126"/><g class="gp-face">' +
+        '<ellipse cx="35.5" cy="47" rx="4.5" ry="7" fill="#f4cda9" stroke="currentColor" stroke-width="3"/>' +
+        '<ellipse cx="84.5" cy="47" rx="4.5" ry="7" fill="#f4cda9" stroke="currentColor" stroke-width="3"/>' +
+        '<ellipse class="gp-line" cx="60" cy="45" rx="24" ry="27" style="fill:#f4cda9"/>' +
+        '<path d="M48 26 Q56 21 65 23" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" opacity="0.9"/>' +
+        '<path d="M38 31 Q32 42 38 55" fill="none" stroke="#aab2bb" stroke-width="7" stroke-linecap="round"/>' +
+        '<path d="M82 31 Q88 42 82 55" fill="none" stroke="#aab2bb" stroke-width="7" stroke-linecap="round"/>' +
+        '<path d="M46 34 Q51 31.5 56 33.5" fill="none" stroke="#8a939d" stroke-width="3.2" stroke-linecap="round"/>' +
+        '<path d="M64 33.5 Q69 31.5 74 34" fill="none" stroke="#8a939d" stroke-width="3.2" stroke-linecap="round"/>' +
+        '<path d="M37 47 Q37 66 44 75 Q47 80 52 79 Q56 85 60 84 Q64 85 68 79 Q73 80 76 75 Q83 66 83 47 Q76 53 68 52 Q60 51 52 52 Q44 53 37 47 Z" fill="#f1f3f6"/>' +
+        '<g fill="none" stroke-linecap="round">' +
+        '<path d="M37 47 Q37 56.5 38.75 63.5 M83 47 Q83 56.5 81.25 63.5" stroke="#aab2bb" stroke-width="0.7"/>' +
+        '<path d="M38.75 63.5 Q40.5 70.5 44 75 M81.25 63.5 Q79.5 70.5 76 75" stroke="#5b6570" stroke-width="1.1"/>' +
+        '<path d="M44 75 Q47 80 52 79 Q56 85 60 84 Q64 85 68 79 Q73 80 76 75" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>' +
+        '</g><g fill="none" stroke="#b3bbc4" stroke-width="1.5" stroke-linecap="round"><path d="M43 63 Q44 68 47 72"/>' +
+        '<path d="M77 63 Q76 68 73 72"/><path d="M51 70 Q52 74 51 78"/><path d="M56 73 Q57 77 56 81"/>' +
+        '<path d="M64 73 Q63 77 64 81"/><path d="M69 70 Q68 74 69 78"/></g>' +
+        '<path d="M49 53 Q54 50 60 52 Q66 50 71 53 Q74 57 71.5 61 Q69 56 60 55.5 Q51 56 48.5 61 Q46 57 49 53 Z" fill="#f1f3f6" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>' +
+        '<path d="M58.5 41 Q55.5 46.5 59 48 Q62.5 48.5 63.5 46" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>' +
+        '<circle class="gp-cheek" cx="45" cy="47" r="4" style="fill:#e8836b"/>' +
+        '<circle class="gp-cheek" cx="75" cy="47" r="4" style="fill:#e8836b"/><g class="gp-eyes">' +
+        '<circle class="gp-dot" cx="51" cy="40" r="3"/><circle class="gp-dot" cx="69" cy="40" r="3"/></g>' +
+        '<g class="gp-eyes-up"><circle class="gp-dot" cx="53" cy="37.5" r="3"/>' +
+        '<circle class="gp-dot" cx="71" cy="37.5" r="3"/></g>' +
+        '<path class="gp-line gp-m gp-m-happy" d="M53 59 Q60 65 67 59"/>' +
+        '<path class="gp-line gp-m gp-m-sorry" d="M54 63 Q60 58 66 63"/>' +
+        '<path class="gp-line gp-m gp-m-thinking" d="M55 61 L66 59.5"/>' +
+        '<ellipse class="gp-line gp-m gp-m-talk" cx="60" cy="60.5" rx="4.5" ry="3.4"/></g></svg>'
+    }
+  };
+
+  var MOODS = ['talk', 'happy', 'sorry', 'thinking'];
+
+  var cast = null;      // the character on the page, or null when the game has none
+  var saidAt = 0;       // when he last said something a type asked him to
+  var greeting = '';    // said with the first question, so the first question does not erase it
+
+  function mountCharacter(main) {
+    var id = data && data.character;
+    if (cast || !id || !CHARACTERS[id]) { return; }
+
+    var who = CHARACTERS[id];
+    var box = GP.el('div', 'gp-character gp-mood-talk');
+    box.id = 'gp-character';
+    box.setAttribute('aria-hidden', 'true');
+
+    var figure = GP.el('div', 'gp-figure');
+    figure.innerHTML = who.svg;
+    box.appendChild(figure);
+
+    var bubble = GP.el('div', 'gp-bubble');
+    bubble.appendChild(GP.el('span', 'gp-bubble-who', who.name));
+    var words = GP.el('p', 'gp-bubble-say');
+    bubble.appendChild(words);
+    box.appendChild(bubble);
+
+    main.parentNode.insertBefore(box, main);
+    cast = { box: box, words: words };
+    document.body.className += ' gp-has-character';
+  }
+
+  function characterSay(text, mood) {
+    if (!cast) { return; }
+    if (MOODS.indexOf(mood) < 0) { mood = 'talk'; }
+    cast.words.textContent = text;
+    // Taking the class off and putting it back restarts the hop, so two right answers in a row
+    // both get one.
+    cast.box.className = 'gp-character';
+    void cast.box.offsetWidth;
+    cast.box.className = 'gp-character gp-mood-' + mood;
+  }
+
+  /**
+   * For a template that wants to use the character directly (a type written around him). Does
+   * nothing when the game has no character, so a template never has to ask.
+   */
+  GP.character = {
+    say: function (text, mood) { characterSay(text, mood); },
+    present: function () { return cast !== null; }
+  };
+
+  /* ------------------------------------------------------------- the shell */
+
+  var game = null;      // what the template registered
+  var data = null;      // the JSON GamifyPlus built into the page
+  var player = '';      // the name typed at the gate
+  var startedAt = 0;
+  var copied = false;   // whether the result line has been copied, so Play again can warn
+
+  /** A game type's template calls this once, at the bottom of its own script. */
+  GP.play = function (definition) {
+    game = definition;
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+  };
+
+  function readData() {
+    var tag = document.getElementById('gp-game');
+    if (!tag) { return null; }
+    try {
+      return JSON.parse(tag.textContent);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function boot() {
+    data = readData();
+
+    var main = document.getElementById('gp-main');
+    if (!main) { return; }
+
+    if (!data) {
+      GP.clear(main).appendChild(GP.el('p', 'gp-problem',
+        'This game could not be read. Build it again from Gamify+.'));
+      return;
+    }
+
+    document.title = data.title;
+    setText('gp-title', data.title);
+    setText('gp-sub', data.outcome || data.description || '');
+    setText('gp-foot-course', data.course ? data.course + ' · ' : '');
+    credit(data.designer);
+
+    if (data.asksForName) {
+      showNameGate(main);
+    } else {
+      begin(main, '');
+    }
+  }
+
+  /**
+   * The game's original designer, credited in the footer beside "Made with Gamify+" (Ron,
+   * 2026-09-25: "Original game design by Dr. Ron Eaglin" on the games he designed). Only a type
+   * that names its designer gets the line.
+   */
+  function credit(designer) {
+    var course = document.getElementById('gp-foot-course');
+    if (!designer || !course || !course.parentNode) { return; }
+    var line = GP.el('span', 'gp-foot-credit', 'Original game design by ' + designer + ' · ');
+    course.parentNode.insertBefore(line, course.nextSibling);
+  }
+
+  function setText(id, text) {
+    var node = document.getElementById(id);
+    if (node) {
+      node.textContent = text;
+      if (!text) { node.style.display = 'none'; }
+    }
+  }
+
+  function showNameGate(main) {
+    GP.clear(main);
+
+    var card = GP.el('section', 'gp-card');
+    card.appendChild(GP.el('h2', null, 'Before you start'));
+
+    var how = GP.el('div', 'gp-how');
+    how.appendChild(GP.el('h3', null, 'How to play'));
+    var list = GP.el('ul');
+    (data.howToPlay || []).forEach(function (line) {
+      list.appendChild(GP.el('li', null, line));
+    });
+    how.appendChild(list);
+    card.appendChild(how);
+
+    var form = GP.el('form', 'gp-gate');
+    var label = GP.el('label', null, 'Type your name — the way the person who gave you this game knows you');
+    label.setAttribute('for', 'gp-name');
+    form.appendChild(label);
+
+    var input = GP.el('input', 'gp-name-input');
+    input.id = 'gp-name';
+    input.type = 'text';
+    input.autocomplete = 'name';
+    input.required = true;
+    input.placeholder = 'e.g. Maria Gomez';
+    form.appendChild(input);
+
+    var note = GP.el('p', 'gp-note',
+      'Your name goes on the result line at the end, which is how the person who gave you this ' +
+      'game sees that you played. Nothing is sent anywhere — it stays in this page until you copy it.');
+    form.appendChild(note);
+
+    var error = GP.el('p', 'gp-error');
+    error.id = 'gp-name-error';
+    error.setAttribute('role', 'alert');
+    error.style.display = 'none';
+    form.appendChild(error);
+
+    var start = GP.el('button', 'gp-button gp-primary', 'Start');
+    start.type = 'submit';
+    form.appendChild(start);
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var typed = input.value.trim();
+
+      if (typed.length < 2) {
+        error.textContent = 'Please type your name — at least two characters — so whoever reads ' +
+          'your result can tell whose it is.';
+        error.style.display = '';
+        input.focus();
+        return;
+      }
+
+      begin(main, typed);
+    });
+
+    card.appendChild(form);
+    main.appendChild(card);
+    input.focus();
+  }
+
+  function begin(main, name) {
+    player = name;
+    startedAt = Date.now();
+
+    GP.clear(main);
+    var stage = GP.el('div', 'gp-stage');
+    main.appendChild(stage);
+
+    var status = GP.el('p', 'gp-status');
+    status.id = 'gp-status';
+    status.setAttribute('role', 'status');
+    status.setAttribute('aria-live', 'polite');
+    main.appendChild(status);
+
+    mountCharacter(main);
+    greeting = (player ? 'Hello, ' + player + '! ' : 'Hello! ') + "Let's play.";
+    characterSay(greeting, 'talk');
+
+    game.render(stage, data, {
+      finish: finish,
+      progress: progress,
+      say: say,
+      player: player
+    });
+  }
+
+  function progress(done, total) {
+    var bar = document.getElementById('gp-progress');
+    if (!bar) { return; }
+    bar.max = total;
+    bar.value = done;
+    bar.textContent = done + ' of ' + total;
+    var label = document.getElementById('gp-progress-label');
+    if (label) {
+      // A flashcard game counts cards, not questions. The word comes from the game type.
+      var noun = (data && data.itemNoun) || 'question';
+      label.textContent = noun.charAt(0).toUpperCase() + noun.slice(1) + ' ' +
+        Math.min(done + 1, total) + ' of ' + total;
+    }
+
+    // A new question: the character waits for the player. Not when the type has just said
+    // something (right or wrong) in the same moment — that reaction must not be talked over.
+    if (done < total && Date.now() - saidAt > 50) {
+      var word = (data && data.itemNoun) || 'question';
+      characterSay((greeting ? greeting + ' ' : '') + word.charAt(0).toUpperCase() + word.slice(1) +
+        ' ' + (done + 1) + ' of ' + total + ' — your turn.', 'thinking');
+      greeting = '';
+    }
+  }
+
+  /** What just happened, in words, for the status line — and for the character, with a mood. */
+  function say(message, mood) {
+    var status = document.getElementById('gp-status');
+    if (status) {
+      // A screen reader announces a live region only when its text changes, so "Correct." after
+      // "Correct." would be silence. Empty it, then fill it a moment later.
+      if (status.textContent === message) {
+        status.textContent = '';
+        setTimeout(function () { status.textContent = message; }, 60);
+      } else {
+        status.textContent = message;
+      }
+    }
+    saidAt = Date.now();
+    greeting = '';
+    characterSay(message, mood);
+  }
+
+  /**
+   * The end of a game. `detail` is an optional list of {label, ok} lines — what was missed —
+   * which is the part a student actually learns from. `options` may give a `headline` for the
+   * score ("You 4 · Computer 2"), a `reviewHeading` for the list ("Your tricks"), and `say` (with
+   * `mood`) for the character's last word in place of the usual cheer.
+   */
+  function finish(score, max, detail, options) {
+    var seconds = Math.round((Date.now() - startedAt) / 1000);
+    var main = document.getElementById('gp-main');
+    GP.clear(main);
+
+    var card = GP.el('section', 'gp-card gp-result');
+    card.appendChild(GP.el('h2', null, 'Finished'));
+
+    var headline = GP.el('p', 'gp-score');
+    // A game against the computer says the match ("You 4 · Computer 2"); the result line still
+    // carries score and max (Fractazmic, 2026-09-25).
+    headline.appendChild(GP.el('strong', null, options && options.headline ? options.headline : score + ' out of ' + max));
+    headline.appendChild(document.createTextNode(' · ' + GP.clock(seconds)));
+    card.appendChild(headline);
+
+    if (player) {
+      card.appendChild(GP.el('p', 'gp-who', player));
+    }
+
+    if (detail && detail.length) {
+      var review = GP.el('div', 'gp-review');
+      review.appendChild(GP.el('h3', null, options && options.reviewHeading ? options.reviewHeading : 'What you answered'));
+      var list = GP.el('ul', 'gp-review-list');
+      detail.forEach(function (line) {
+        var item = GP.el('li', line.ok ? 'gp-ok' : 'gp-miss');
+        item.appendChild(GP.el('span', 'gp-mark', line.ok ? '✓' : '✗'));
+        item.appendChild(GP.el('span', 'gp-review-text', line.label));
+        list.appendChild(item);
+      });
+      review.appendChild(list);
+      card.appendChild(review);
+    }
+
+    if (data.asksForName && data.gameKey) {
+      card.appendChild(receiptPanel(score, max));
+    }
+
+    var again = GP.el('button', 'gp-button', 'Play again');
+    again.type = 'button';
+    again.addEventListener('click', function () {
+      // Reloading throws the result line away. Asking first is the only chance a student gets.
+      if (document.getElementById('gp-receipt-line') && !copied) {
+        if (!window.confirm('You have not copied your result line yet. Play again anyway?')) { return; }
+      }
+      window.location.reload();
+    });
+    card.appendChild(again);
+
+    main.appendChild(card);
+
+    // A game with its own headline says its own last word ("You win!"): "1 out of 2, have another
+    // go" to a child who just beat the computer would contradict the card (UX review 2026-09-25).
+    if (options && options.say) {
+      characterSay(options.say, options.mood || 'happy');
+      (cast ? cast.box : card).scrollIntoView({ block: 'start' });
+      return;
+    }
+
+    // The score is in the card; this only cheers, so it says nothing the card does not.
+    var share = max > 0 ? score / max : 0;
+    characterSay(share >= 0.9 ? 'Excellent — ' + score + ' out of ' + max + '!'
+      : share >= 0.6 ? 'Well played — ' + score + ' out of ' + max + '.'
+      : score + ' out of ' + max + (detail && detail.length
+        ? '. Look at what you missed below, then have another go.'
+        : '. Have another go.'),
+      share >= 0.6 ? 'happy' : 'talk');
+
+    (cast ? cast.box : card).scrollIntoView({ block: 'start' });
+  }
+
+  function receiptPanel(score, max) {
+    var line = GP.receiptLine(data.gameKey, player, data.slug, score, max, GP.today());
+
+    var panel = GP.el('div', 'gp-receipt');
+    panel.appendChild(GP.el('h3', null, 'Hand this in'));
+    panel.appendChild(GP.el('p', 'gp-note',
+      'Copy the line below and paste it wherever you were asked to — or take a screenshot of ' +
+      'this whole panel. It records your name, this game, your score and today’s date.'));
+
+    var box = GP.el('output', 'gp-receipt-line', line);
+    box.id = 'gp-receipt-line';
+    panel.appendChild(box);
+
+    var copy = GP.el('button', 'gp-button gp-primary', 'Copy the line');
+    copy.type = 'button';
+    copy.addEventListener('click', function () {
+      copyText(line, function (ok) {
+        copied = true;
+        copy.textContent = ok ? 'Copied' : 'Select the line and press Ctrl+C';
+      });
+    });
+    panel.appendChild(copy);
+
+    var print = GP.el('button', 'gp-button', 'Print or save as PDF');
+    print.type = 'button';
+    print.addEventListener('click', function () { window.print(); });
+    panel.appendChild(print);
+
+    return panel;
+  }
+
+  function copyText(text, done) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+      return;
+    }
+
+    // file:// in some browsers has no clipboard API; select the text so Ctrl+C works.
+    var box = document.getElementById('gp-receipt-line');
+    if (box && window.getSelection) {
+      var range = document.createRange();
+      range.selectNodeContents(box);
+      var selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+    done(false);
+  }
+
+  /* --------------------------------------------------------------- exports */
+
+  root.GP = GP;
+
+  // So the C# tests can run these exact rules under Node.
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = GP;
+  }
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+<script>
+/*
+ * Fill the Blank. The sentence stays on screen with the gap in it, so the student can read the
+ * whole thing while they answer — a blank shown on its own is a vocabulary test, and the point of
+ * this one is the context.
+ *
+ * When choices are on, the wrong ones are the answers to the other sentences in the same game.
+ * That makes them plausible for free, and it means the teacher never types a distractor.
+ */
+(function () {
+  'use strict';
+
+  var GAP = '___';
+
+  function plain(text) {
+    return String(text == null ? '' : text)
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')   // combining accents
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim();
+  }
+
+  GP.play({
+    render: function (stage, data, api) {
+      var settings = data.settings || {};
+      var choosing = settings.showChoices === true;
+
+      var all = (data.items || []).filter(function (item) {
+        return item.sentence && item.answer;
+      });
+
+      var sentences = settings.shuffle === false ? all.slice() : GP.shuffle(all);
+
+      var limit = Number(settings.sentencesPerRound) || 0;
+      if (limit > 0 && limit < sentences.length) {
+        sentences = sentences.slice(0, limit);
+      }
+
+      var at = 0;
+      var score = 0;
+      var detail = [];
+
+      var card = GP.el('section', 'gp-card');
+      stage.appendChild(card);
+
+      var meta = GP.el('div', 'gp-meta');
+      var label = GP.el('span', null, '');
+      label.id = 'gp-progress-label';
+      var bar = document.createElement('progress');
+      bar.id = 'gp-progress';
+      bar.max = sentences.length;
+      bar.value = 0;
+      meta.appendChild(label);
+      meta.appendChild(bar);
+      card.appendChild(meta);
+
+      var body = GP.el('div');
+      card.appendChild(body);
+
+      show();
+
+      /** The sentence with the gap shown as a blank, or filled in with what they answered. */
+      function sentenceWith(item, filled) {
+        var text = item.sentence.indexOf(GAP) >= 0 ? item.sentence : item.sentence + ' ' + GAP;
+        var parts = text.split(GAP);
+
+        var line = GP.el('p', 'gp-question');
+        line.appendChild(document.createTextNode(parts[0]));
+        line.appendChild(GP.el('span', 'gp-blank' + (filled ? ' gp-blank-filled' : ''),
+          filled || '      '));
+        line.appendChild(document.createTextNode(parts.slice(1).join(GAP)));
+
+        return line;
+      }
+
+      function show() {
+        api.progress(at, sentences.length);
+        GP.clear(body);
+
+        var item = sentences[at];
+        body.appendChild(sentenceWith(item, null));
+
+        if (choosing) {
+          showChoices(item);
+        } else {
+          showBox(item);
+        }
+      }
+
+      function showBox(item) {
+        var form = GP.el('form', 'gp-gate');
+        var prompt = GP.el('label', null, 'What word belongs in the blank?');
+        prompt.setAttribute('for', 'gp-answer');
+        form.appendChild(prompt);
+
+        var input = GP.el('input', 'gp-text-input');
+        input.id = 'gp-answer';
+        input.type = 'text';
+        input.autocomplete = 'off';
+        input.autocapitalize = 'none';
+        input.spellcheck = false;
+        form.appendChild(input);
+
+        var submit = GP.el('button', 'gp-button gp-primary', 'Check');
+        submit.type = 'submit';
+        form.appendChild(submit);
+
+        var skip = GP.el('button', 'gp-button', 'I do not know — show me');
+        skip.type = 'button';
+        skip.addEventListener('click', function () { settle(item, false, item.answer); });
+        form.appendChild(skip);
+
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          var typed = input.value;
+
+          if (plain(typed).length === 0) {
+            api.say('Type a word, or press "I do not know" to be shown it.', 'thinking');
+            input.focus();
+            return;
+          }
+
+          settle(item, accepted(item).indexOf(plain(typed)) >= 0, typed);
+        });
+
+        body.appendChild(form);
+        input.focus();
+      }
+
+      function showChoices(item) {
+        // Three wrong answers, taken from the other sentences: plausible by construction, and the
+        // teacher never has to invent one.
+        var others = [];
+        sentences.forEach(function (other) {
+          if (other !== item && plain(other.answer) !== plain(item.answer)
+              && others.indexOf(other.answer) < 0) {
+            others.push(other.answer);
+          }
+        });
+
+        var options = GP.shuffle([item.answer].concat(GP.shuffle(others).slice(0, 3)));
+
+        var list = GP.el('div', 'gp-options');
+        list.setAttribute('role', 'group');
+        list.setAttribute('aria-label', 'Choose the missing word');
+
+        options.forEach(function (word) {
+          var button = GP.el('button', 'gp-button gp-option', word);
+          button.type = 'button';
+          button.addEventListener('click', function () {
+            settle(item, plain(word) === plain(item.answer), word);
+          });
+          list.appendChild(button);
+        });
+
+        body.appendChild(list);
+        var first = list.querySelector('button');
+        if (first) { first.focus(); }
+      }
+
+      function accepted(item) {
+        return [item.answer].concat(item.alsoAccept || [])
+          .map(plain)
+          .filter(function (text) { return text.length > 0; });
+      }
+
+      function settle(item, ok, said) {
+        if (ok) { score++; }
+        detail.push({ label: item.sentence.replace(GAP, item.answer), ok: ok });
+
+        GP.clear(body);
+        body.appendChild(sentenceWith(item, item.answer));
+
+        var feedback = GP.el('div', 'gp-feedback ' + (ok ? 'gp-ok' : 'gp-miss'));
+        feedback.appendChild(GP.el('strong', null, ok ? 'Right. ' : 'The word was "' + item.answer + '". '));
+        if (!ok && said && plain(said) !== plain(item.answer)) {
+          feedback.appendChild(document.createTextNode('You said "' + said + '". '));
+        }
+        if (item.why) {
+          feedback.appendChild(document.createTextNode(item.why));
+        }
+        body.appendChild(feedback);
+        api.say(ok ? 'Correct.' : 'The word was ' + item.answer + '.', ok ? 'happy' : 'sorry');
+
+        var next = GP.el('button', 'gp-button gp-primary',
+          at + 1 < sentences.length ? 'Next sentence' : 'See my result');
+        next.type = 'button';
+        next.addEventListener('click', function () {
+          at++;
+          if (at < sentences.length) {
+            show();
+          } else {
+            api.progress(sentences.length, sentences.length);
+            api.finish(score, sentences.length, detail);
+          }
+        });
+        body.appendChild(next);
+        next.focus();
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
